@@ -32,6 +32,11 @@
             return 0;
         }
 
+        public (bool isBool, int number) TupleMethod(int index)
+        {
+            return (false, index);
+        }
+
         public void MethodWithParams(int a, string b)
         {
         }

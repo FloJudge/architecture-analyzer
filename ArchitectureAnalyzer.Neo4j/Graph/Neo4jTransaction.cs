@@ -9,62 +9,89 @@ namespace ArchitectureAnalyzer.Neo4j.Graph
     
     internal class Neo4JTransaction : IGraphDatabaseTransaction
     {
-        private readonly ISession _session;
+        //private readonly ISession _session;
 
-        private readonly ITransaction _tx;
+        //private readonly ITransaction _tx;
+
+        private readonly IDriver _driver;
 
         public Neo4JTransaction(IDriver driver)
         {
-            _session = driver.Session();
-            _tx = _session.BeginTransaction();
+            _driver = driver;
+            //_session = driver.Session();
+            //_tx = _session.BeginTransaction();
         }
 
         public void Dispose()
         {
-            _tx.Dispose();
-            _session.Dispose();
+            //_tx.Dispose();
+            //_session.Dispose();
         }
 
         public void Commit()
         {
-            _tx.Success();
+            //_tx.Success();
         }
 
         public void Clear()
         {
-            var statement = new Statement("MATCH (n) DETACH DELETE n");
+            using (var session = _driver.Session())
+            using (var tx = session.BeginTransaction())
+            {
+                var statement = new Statement("MATCH (n) DETACH DELETE n");
 
-            _tx.Run(statement);
+                tx.Run(statement);
+
+                tx.Success();
+                tx.Dispose();
+                session.Dispose();
+            }
         }
 
         public void CreateNode<T>(T model)
             where T : Node
         {
-            var label = typeof(T).Name;
+            using (var session = _driver.Session())
+            using (var tx = session.BeginTransaction())
+            {
+                var label = typeof(T).Name;
 
-            var statement = $"CREATE (:{label} {{model}})";
+                var statement = $"CREATE (:{label} {{model}})";
 
-            var modelData = ModelConverter.Convert(model);
-            var parameters = new Dictionary<string, object> { { "model", modelData } };
+                var modelData = ModelConverter.Convert(model);
+                var parameters = new Dictionary<string, object> { { "model", modelData } };
 
-            _tx.Run(statement, parameters);
+                tx.Run(statement, parameters);
+
+                tx.Success();
+                tx.Dispose();
+                session.Dispose();
+            }
         }
 
         public void CreateRelationship<TFrom, TTo>(TFrom fromNode, TTo toNode, string relationType)
             where TFrom : Node where TTo : Node
         {
-            var fromLabel = typeof(TFrom).Name;
-            var toLabel = typeof(TTo).Name;
+            using (var session = _driver.Session())
+            using (var tx = session.BeginTransaction())
+            {
+                var fromLabel = typeof(TFrom).Name;
+                var toLabel = typeof(TTo).Name;
 
-            var fromId = fromNode.Id;
-            var toId = toNode.Id;
+                var fromId = fromNode.Id;
+                var toId = toNode.Id;
 
-            var statement = $"MATCH (from:{fromLabel} {{ Id: {{fromId}} }}), (to:{toLabel}  {{ Id: {{toId}} }})"
-                            + $" CREATE (from)-[:{relationType}]->(to)";
+                var statement = $"MATCH (from:{fromLabel} {{ Id: {{fromId}} }}), (to:{toLabel}  {{ Id: {{toId}} }})"
+                                + $" CREATE (from)-[:{relationType}]->(to)";
 
-            var parameters = new Dictionary<string, object> { { "fromId", fromId }, { "toId", toId } };
+                var parameters = new Dictionary<string, object> { { "fromId", fromId }, { "toId", toId } };
 
-            _tx.Run(statement, parameters);
+                tx.Run(statement, parameters);
+
+                tx.Success();
+                tx.Dispose();
+                session.Dispose();
+            }
         }
     }
 }

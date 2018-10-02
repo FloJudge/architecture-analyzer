@@ -15,11 +15,12 @@
 
         public NetProperty ScanProperty(PropertyDefinition property, NetType typeModel)
         {
-            Logger.LogTrace("    Scanning property '{0}'", property.Name);
+            //Logger.LogTrace("    Scanning property '{0}'", property.Name);
             
             var propertyModel = Factory.CreatePropertyModel(property);
             propertyModel.DeclaringType = typeModel;
-            propertyModel.Type = GetTypeFromTypeReference(property.GetMethod.ReturnType);
+            //propertyModel.Type = GetTypeFromTypeReference(property.GetMethod.ReturnType);
+            propertyModel.Type = GetTypeFromTypeReference(property.PropertyType);
 
             return propertyModel;
         }

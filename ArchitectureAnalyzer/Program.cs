@@ -54,7 +54,7 @@
 
         private static IServiceProvider CreateServiceProvider(CommandOption configFileOption)
         {
-            var configFile = configFileOption.HasValue() ? configFileOption.Value() : "appconfig.json";
+            var configFile = configFileOption.HasValue() ? configFileOption.Value() : "ArchitectureAnalyzer/appconfig.json";
 
             var config = ConfigurationLoader.LoadConfig(configFile);
             var serviceProvider = new ServiceProviderSetup(config).ConfigureServiceProvider();

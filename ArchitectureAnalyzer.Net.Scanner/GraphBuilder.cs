@@ -66,6 +66,7 @@ namespace ArchitectureAnalyzer.Net.Scanner
             _logger.LogInformation("  Creating {0} nodes", typeof(TNode).Name);
             foreach (var model in nodes)
             {
+                //_logger.LogInformation("  Creating {0} node with ID {1}", model.ToString(), model.Id);
                 _tx.CreateNode(model);
             }
         }

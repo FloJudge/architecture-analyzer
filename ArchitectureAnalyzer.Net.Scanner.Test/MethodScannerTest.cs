@@ -169,5 +169,14 @@
             Assert.That(returnType.GenericType, Is.EqualTo(NetType(typeof(IEnumerable<>))));
             Assert.That(returnType.GenericTypeInstantiationArgs, Is.EqualTo(new[] { NetType<string>() }));
         }
+
+        [Test]
+        public void TupleMethodParametersAreAccepted()
+        {
+            var method = GetMethodDefinition<ClassWithMembers>(nameof(ClassWithMembers.TupleMethod));
+            var model = _scanner.ScanMethod(method, NetType<ClassWithMembers>());
+
+            Assert.That(model.GenericParameters.Count, Is.EqualTo(0));
+        }
     }
 }
