@@ -1,5 +1,7 @@
 ﻿namespace ArchitectureAnalyzer.Net.Scanner.Test
 {
+    using System;
+
     using ArchitectureAnalyzer.Net.Model;
 
     using NUnit.Framework;
@@ -239,6 +241,39 @@
             var model = _scanner.ScanType(type, _assembly);
 
             Assert.That(model.Visibility, Is.EqualTo(Visibility.Internal));
+        }
+
+        [Test]
+        [TestCase(typeof(ExportAttributeClass), 1)]
+        [TestCase(typeof(ExportAttributeClassWithType), 1)]
+        [TestCase(typeof(ExportAttributeClassWithName), 1)]
+        [TestCase(typeof(ExportAttributeClassWithNameAndType), 1)]
+        public void HasTypeExportTypes(Type attributeType, int expectedValue)
+        {
+            var type = GetTypeDefintion(attributeType);
+
+            var model = _scanner.ScanType(type, _assembly);
+
+            Assert.That(model.Exports.Count, Is.EqualTo(expectedValue));
+        }
+
+        [Test]
+        [TestCase(typeof(ImportAttributeClass), 1)]
+        [TestCase(typeof(ImportAttributeClassWithType), 1)]
+        [TestCase(typeof(ImportAttributeClassWithName), 1)]
+        [TestCase(typeof(ImportAttributeClassWithNameAndType), 1)]
+        [TestCase(typeof(ImportManyAttributeClass), 1)]
+        [TestCase(typeof(ImportManyAttributeClassWithName), 1)]
+        [TestCase(typeof(ImportManyAttributeClassWithType), 1)]
+        [TestCase(typeof(ImportManyAttributeClassWithNameAndType), 1)]
+        [TestCase(typeof(ImportingConstructorAttributeClass), 1)]
+        public void HasTypeImportTypes(Type attributeType, int expectedValue)
+        {
+            var type = GetTypeDefintion(attributeType);
+
+            var model = _scanner.ScanType(type, _assembly);
+
+            Assert.That(model.Imports.Count, Is.EqualTo(expectedValue));
         }
     }
 }

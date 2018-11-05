@@ -27,6 +27,36 @@
             return GetTypeFromTypeReference(customAttribute.AttributeType);
         }
 
+        protected NetType GetMefUsedTypesFromCustomAttribute(CustomAttribute customAttribute, string typeName, TypeReference typeRef)
+        {
+            if (customAttribute == null || !customAttribute.AttributeType.Name.Contains(typeName))
+            {
+                return null;
+            }
+
+            var nameOfAttributeType = string.Empty;
+            foreach (var customArg in customAttribute.ConstructorArguments)
+            {
+                if (customArg.Value is string)
+                {
+                    nameOfAttributeType = customArg.Value.ToString();
+                }
+
+                if (customArg.Value is TypeReference argTypeRef)
+                {
+                    if (string.IsNullOrEmpty(nameOfAttributeType))
+                    {
+                        return Factory.CreateTypeModel(argTypeRef);
+                    }
+
+                    argTypeRef.Name = nameOfAttributeType;
+                    return Factory.CreateTypeModel(argTypeRef);
+                }
+            }
+                
+            return Factory.CreateTypeModel(typeRef);
+        }
+
         protected NetType GetTypeFromTypeReference(TypeReference typeReference)
         {
             return Factory.CreateTypeModel(typeReference);

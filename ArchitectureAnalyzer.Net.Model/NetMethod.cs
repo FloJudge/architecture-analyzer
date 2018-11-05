@@ -17,7 +17,13 @@
         public bool IsGeneric { get; set; }
         
         public Visibility Visibility { get; set; }
-        
+
+        [Ignore]
+        public IList<NetType> Exports { get; set; }
+
+        [Ignore]
+        public IList<NetType> Imports { get; set; }
+
         [Ignore]
         public NetType DeclaringType { get; set; }
 
@@ -34,6 +40,9 @@
         {
             Parameters = new List<NetMethodParameter>();
             GenericParameters = new List<NetType>();
+
+            Exports = new List<NetType>();
+            Imports = new List<NetType>();
         }
         
         public override string ToString()

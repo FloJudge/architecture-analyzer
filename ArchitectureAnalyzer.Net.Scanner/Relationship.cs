@@ -19,6 +19,10 @@ namespace ArchitectureAnalyzer.Net.Scanner
 
         public const string IMPLEMENTS = "IMPLEMENTS";
 
+        public const string EXPORTS = "EXPORTS";
+
+        public const string IMPORTS = "IMPORTS";
+
         public const string DEPENDS_ON = "DEPENDS_ON";
 
         public const string RETURNS = "RETURNS";

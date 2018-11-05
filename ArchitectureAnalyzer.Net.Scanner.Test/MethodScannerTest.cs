@@ -23,6 +23,7 @@
 
             var typeScanner = new TypeScanner(Module, ModelFactory, Logger);
             typeScanner.ScanType(GetTypeDefintion<ClassWithMembers>(), assembly);
+            typeScanner.ScanType(GetTypeDefintion<ClassWithMefUsages>(), assembly);
             typeScanner.ScanType(GetTypeDefintion<InheritedFromClassWithMembers>(), assembly);
         }
         
@@ -177,6 +178,37 @@
             var model = _scanner.ScanMethod(method, NetType<ClassWithMembers>());
 
             Assert.That(model.GenericParameters.Count, Is.EqualTo(0));
+        }
+        
+        [TestCase(nameof(ClassWithMefUsages.ExportMethod), 1)]
+        [TestCase(nameof(ClassWithMefUsages.ExportMethodWithName), 1)]
+        [TestCase(nameof(ClassWithMefUsages.ExportMethodWithType), 1)]
+        [TestCase(nameof(ClassWithMefUsages.ExportMethodWithNameAndType), 1)]
+        public void HasMethodExportTypes(string propertyName, int expectedValue)
+        {
+            var method = GetMethodDefinition<ClassWithMefUsages>(propertyName);
+
+            var model = _scanner.ScanMethod(method, NetType<ClassWithMefUsages>());
+
+            Assert.That(model.Exports.Count, Is.EqualTo(expectedValue));
+        }
+        
+        [TestCase(nameof(ClassWithMefUsages.ImportMethodVoidType), 0)]
+        [TestCase(nameof(ClassWithMefUsages.ImportMethodImportType), 1)]
+        [TestCase(nameof(ClassWithMefUsages.ImportMethodWithName), 0)]
+        [TestCase(nameof(ClassWithMefUsages.ImportMethodWithType), 1)]
+        [TestCase(nameof(ClassWithMefUsages.ImportMethodWithNameAndType), 1)]
+        [TestCase(nameof(ClassWithMefUsages.ImportMethodWithAttribute), 8)]
+        [TestCase(nameof(ClassWithMefUsages.ImportMethodWithAttributeImportType), 9)]
+        [TestCase(nameof(ClassWithMefUsages.ImportMethodWithoutAttribute), 8)]
+        [TestCase(".ctor", 8)]
+        public void HasMethodImportTypes(string methodName, int expectedValue)
+        {
+            var method = GetMethodDefinition<ClassWithMefUsages>(methodName);
+
+            var model = _scanner.ScanMethod(method, NetType<ClassWithMefUsages>());
+
+            Assert.That(model.Imports.Count, Is.EqualTo(expectedValue));
         }
     }
 }

@@ -47,11 +47,20 @@
             _logger.LogInformation("Scan complete");
         }
 
-        private IReadOnlyList<NetAssembly> ScanAssemblies()
+        private IDictionary<long, NetAssembly> ScanAssemblies()
         {
-            return _assemblies
-                .Select(ScanAssembly)
-                .ToList();
+            var assembliesDict = new Dictionary<long, NetAssembly>();
+            foreach (var assembly in _assemblies)
+            {
+                var scannedAssembly = ScanAssembly(assembly);
+
+                if (false == assembliesDict.ContainsKey(scannedAssembly.Id))
+                {
+                    assembliesDict.Add(scannedAssembly.Id, scannedAssembly);
+                }
+            }
+
+            return assembliesDict;
         }
 
         private NetAssembly ScanAssembly(string assemblyPath)
@@ -83,15 +92,10 @@
             }
         }
 
-        private void FillDatabase(IReadOnlyList<NetAssembly> scannedAssemblies)
+        private void FillDatabase(IDictionary<long, NetAssembly> scannedAssemblies)
         {
-            using (var tx = _db.BeginTransaction())
-            {
-                var connector = new GraphBuilder(_factory, tx, _logger);
-                connector.Build(scannedAssemblies);
-
-                tx.Commit();
-            }
+            var connector = new GraphBuilder(_factory, _db, _logger);
+            connector.Build(scannedAssemblies);
         }
     }
 }

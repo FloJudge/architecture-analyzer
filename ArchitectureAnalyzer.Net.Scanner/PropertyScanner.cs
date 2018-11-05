@@ -1,5 +1,8 @@
 ﻿namespace ArchitectureAnalyzer.Net.Scanner
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     using ArchitectureAnalyzer.Net.Model;
     using ArchitectureAnalyzer.Net.Scanner.Model;
 
@@ -15,14 +18,22 @@
 
         public NetProperty ScanProperty(PropertyDefinition property, NetType typeModel)
         {
-            //Logger.LogTrace("    Scanning property '{0}'", property.Name);
-            
             var propertyModel = Factory.CreatePropertyModel(property);
             propertyModel.DeclaringType = typeModel;
-            //propertyModel.Type = GetTypeFromTypeReference(property.GetMethod.ReturnType);
             propertyModel.Type = GetTypeFromTypeReference(property.PropertyType);
 
+            propertyModel.Exports = GetMefUsedInterfaces(property, "Export");
+            propertyModel.Imports = GetMefUsedInterfaces(property, "Import");
+
             return propertyModel;
+        }
+
+        private IList<NetType> GetMefUsedInterfaces(PropertyDefinition property, string attributeTypeName)
+        {
+            return property.CustomAttributes
+                .Select(attribute => GetMefUsedTypesFromCustomAttribute(attribute, attributeTypeName, property.PropertyType))
+                .Where(t => t != null)
+                .ToList();
         }
     }
 }

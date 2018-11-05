@@ -34,6 +34,9 @@
             methodModel.ReturnType = GetTypeFromTypeReference(method.ReturnType);
             methodModel.Parameters = CreateParameters(method, methodModel);
             
+            methodModel.Exports = GetMefUsedInterfaces(method, "Export");
+            methodModel.Imports = GetMefUsedInterfaces(method, "Import");
+
             return methodModel;
         }
 
@@ -94,6 +97,36 @@
         private static bool IsGeneric(MethodDefinition method)
         {
             return method.HasGenericParameters;
+        }
+        private IList<NetType> GetMefUsedInterfaces(MethodDefinition methodDefinition, string attributeTypeName)
+        {
+            // TODO: type of nettype could be primitive type => ignore it? only allow class types, which can be imported/exported
+            // Case: Attribute on Method
+            var mefMethodTypes = methodDefinition.CustomAttributes
+                .Select(attribute => GetMefUsedTypesFromCustomAttribute(attribute, attributeTypeName, methodDefinition.ReturnType))
+                .Where(t => t != null && !t.Name.Equals("Void"))
+                .ToList();
+
+            // Case: Attribute on MethodParameter
+            var mefParamTypes = methodDefinition.Parameters
+                    .Select(param => GetMefUsedMethodInterface(param, attributeTypeName, methodDefinition.CustomAttributes.FirstOrDefault(attr => attr.AttributeType.Name.Contains(attributeTypeName))))
+                    .Where(t => t != null)
+                    .ToList();
+
+            return mefMethodTypes.Concat(mefParamTypes).ToList();
+        }
+
+        private NetType GetMefUsedMethodInterface(
+            ParameterDefinition parameter,
+            string attributeTypeName,
+            CustomAttribute methodAttribute)
+        {
+            var paramAttribute =
+                parameter.CustomAttributes.FirstOrDefault(attr => attr.AttributeType.Name.Contains(attributeTypeName));
+
+            return paramAttribute == null
+                       ? GetMefUsedTypesFromCustomAttribute(methodAttribute, attributeTypeName, parameter.ParameterType)
+                       : GetMefUsedTypesFromCustomAttribute(paramAttribute, attributeTypeName, parameter.ParameterType);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace ArchitectureAnalyzer.Net.Model
 {
     using System.Collections.Generic;
+    using System.Dynamic;
     using System.Linq;
 
     using ArchitectureAnalyzer.Core.Graph;
@@ -48,6 +49,12 @@
         public IList<NetType> Implements { get; set; }
 
         [Ignore]
+        public IList<NetType> Exports { get; set; }
+
+        [Ignore]
+        public IList<NetType> Imports { get; set; }
+
+        [Ignore]
         public IList<NetType> Attributes { get; set; }
 
         [Ignore]
@@ -72,6 +79,8 @@
         public NetType()
         {
             Type = TypeClass.External;
+            Exports = new List<NetType>();
+            Imports = new List<NetType>();
             Implements = new List<NetType>();
             Attributes = new List<NetType>();
             Methods = new List<NetMethod>();
