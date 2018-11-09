@@ -35,8 +35,8 @@
             typeModel.Properties = CreateProperties(type, typeModel);
             typeModel.DisplayName = GetDisplayName(typeModel);
             typeModel.Implements = GetImplementedInterfaces(type);
-            typeModel.Exports = GetMefUsedInterfaces(type, "Export");
-            typeModel.Imports = GetMefUsedInterfaces(type, "Import");
+            typeModel.Exports = GetMefUsedInterfaces(type, nameof(AttributeType.Export));
+            typeModel.Imports = GetMefUsedInterfaces(type, nameof(AttributeType.Import));
 
             typeModel.Attributes = GetAttributes(type);
             typeModel.BaseType = GetBaseType(type);
@@ -160,7 +160,7 @@
         {
             return type.Interfaces
                 .Select(interfaceImpl => GetTypeFromTypeReference(interfaceImpl.InterfaceType))
-                .Where(i => i != null)
+                .Where(IsNetType)
                 .ToList();
         }
 
@@ -168,7 +168,7 @@
         {
             return type.CustomAttributes
                 .Select(attribute => GetMefUsedTypesFromCustomAttribute(attribute, attributeTypeName, type.BaseType))
-                .Where(t => t != null)
+                .Where(IsNetType)
                 .ToList();
         }
 
@@ -176,7 +176,7 @@
         {
             return type.CustomAttributes
                 .Select(GetTypeFromCustomAttribute)
-                .Where(t => t != null)
+                .Where(IsNetType)
                 .ToList();
         }
     }

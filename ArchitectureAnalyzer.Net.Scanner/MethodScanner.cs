@@ -34,8 +34,8 @@
             methodModel.ReturnType = GetTypeFromTypeReference(method.ReturnType);
             methodModel.Parameters = CreateParameters(method, methodModel);
             
-            methodModel.Exports = GetMefUsedInterfaces(method, "Export");
-            methodModel.Imports = GetMefUsedInterfaces(method, "Import");
+            methodModel.Exports = GetMefUsedInterfaces(method, nameof(AttributeType.Export));
+            methodModel.Imports = GetMefUsedInterfaces(method, nameof(AttributeType.Import));
 
             return methodModel;
         }
@@ -100,20 +100,24 @@
         }
         private IList<NetType> GetMefUsedInterfaces(MethodDefinition methodDefinition, string attributeTypeName)
         {
-            // TODO: type of nettype could be primitive type => ignore it? only allow class types, which can be imported/exported
             // Case: Attribute on Method
             var mefMethodTypes = methodDefinition.CustomAttributes
                 .Select(attribute => GetMefUsedTypesFromCustomAttribute(attribute, attributeTypeName, methodDefinition.ReturnType))
-                .Where(t => t != null && !t.Name.Equals("Void"))
+                .Where(IsValidNetType)
                 .ToList();
 
             // Case: Attribute on MethodParameter
             var mefParamTypes = methodDefinition.Parameters
                     .Select(param => GetMefUsedMethodInterface(param, attributeTypeName, methodDefinition.CustomAttributes.FirstOrDefault(attr => attr.AttributeType.Name.Contains(attributeTypeName))))
-                    .Where(t => t != null)
+                    .Where(IsNetType)
                     .ToList();
 
             return mefMethodTypes.Concat(mefParamTypes).ToList();
+        }
+
+        private bool IsValidNetType(NetType t)
+        {
+            return IsNetType(t) && !t.Name.Equals("Void");
         }
 
         private NetType GetMefUsedMethodInterface(

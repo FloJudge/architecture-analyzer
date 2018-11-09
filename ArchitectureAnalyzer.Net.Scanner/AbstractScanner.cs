@@ -50,16 +50,21 @@
                     }
 
                     argTypeRef.Name = nameOfAttributeType;
-                    return Factory.CreateTypeModel(argTypeRef);
+                    return GetTypeFromTypeReference(argTypeRef);
                 }
             }
-                
-            return Factory.CreateTypeModel(typeRef);
+
+            return GetTypeFromTypeReference(typeRef);
         }
 
         protected NetType GetTypeFromTypeReference(TypeReference typeReference)
         {
             return Factory.CreateTypeModel(typeReference);
+        }
+
+        protected bool IsNetType(NetType type)
+        {
+            return type != null;
         }
     }
 }

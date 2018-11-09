@@ -1,7 +1,7 @@
 ﻿namespace TestLibrary
 {
     [Export(typeof(IMefUsage))]
-    public class ClassWithMefUsages : IMefUsage
+    public abstract class ClassWithMefUsages : IMefUsage
     {
         #region Import MEF Property
 

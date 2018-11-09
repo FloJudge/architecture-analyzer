@@ -22,8 +22,8 @@
             propertyModel.DeclaringType = typeModel;
             propertyModel.Type = GetTypeFromTypeReference(property.PropertyType);
 
-            propertyModel.Exports = GetMefUsedInterfaces(property, "Export");
-            propertyModel.Imports = GetMefUsedInterfaces(property, "Import");
+            propertyModel.Exports = GetMefUsedInterfaces(property, nameof(AttributeType.Export));
+            propertyModel.Imports = GetMefUsedInterfaces(property, nameof(AttributeType.Import));
 
             return propertyModel;
         }
@@ -32,7 +32,7 @@
         {
             return property.CustomAttributes
                 .Select(attribute => GetMefUsedTypesFromCustomAttribute(attribute, attributeTypeName, property.PropertyType))
-                .Where(t => t != null)
+                .Where(IsNetType)
                 .ToList();
         }
     }
