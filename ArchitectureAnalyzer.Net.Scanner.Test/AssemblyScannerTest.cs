@@ -73,7 +73,10 @@
                                         nameof(StaticClass),
                                         nameof(TestFixtureAttributedClass),
                                         nameof(UserDefinedAttribute),
-                                        nameof(UserTypeAttributedClass)
+                                        nameof(UserTypeAttributedClass),
+                                        nameof(TypeUsingOtherTypeInPropertyReturnType),
+                                        nameof(TypeUsingOtherTypeInMethod),
+                                        nameof(UsedType)
                                     };
 
             Assert.That(assemblyModel.DefinedTypes.Select(t => t.Name), Is.EquivalentTo(expectedTypes));

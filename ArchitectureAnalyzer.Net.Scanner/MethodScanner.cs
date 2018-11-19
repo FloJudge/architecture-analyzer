@@ -1,5 +1,6 @@
 ﻿namespace ArchitectureAnalyzer.Net.Scanner
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -148,8 +149,20 @@
             return variableTypes;
             */
 
+            var types = GetUsedParameterTypes(methodDefinition);
+            var returnType = GetTypeFromTypeReference(methodDefinition.ReturnType);
 
-            return new List<NetType> { GetTypeFromTypeReference(methodDefinition.ReturnType) };
+            return types.Concat(new [] { returnType }).Where(IsValidType).ToList();
+        }
+
+        private static bool IsValidType(NetType t)
+        {
+            return t!=null && !Equals(t.Name,"Void");
+        }
+
+        private IEnumerable<NetType> GetUsedParameterTypes(MethodDefinition methodDefinition)
+        {
+            return methodDefinition.Parameters.Select(t => GetTypeFromTypeReference(t.ParameterType));
         }
     }
 }
