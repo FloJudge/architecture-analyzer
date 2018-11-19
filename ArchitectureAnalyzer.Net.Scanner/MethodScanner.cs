@@ -150,9 +150,21 @@
             */
 
             var types = GetUsedParameterTypes(methodDefinition);
-            var returnType = GetTypeFromTypeReference(methodDefinition.ReturnType);
+            var returnTypes = GetReturnTypes(methodDefinition);
+            var typesInBody = GetTypesFromBody(methodDefinition);
 
-            return types.Concat(new [] { returnType }).Where(IsValidType).ToList();
+            return types.Concat(returnTypes).Concat(typesInBody).Where(IsValidType).ToList();
+        }
+
+        private IEnumerable<NetType> GetTypesFromBody(MethodDefinition methodDefinition)
+        {
+            var variableTypes = methodDefinition.Body?.Variables.Select(variableDefinition => GetTypeFromTypeReference(variableDefinition.VariableType)).ToList();
+            return variableTypes ?? Enumerable.Empty<NetType>();
+        }
+
+        private IEnumerable<NetType> GetReturnTypes(MethodDefinition methodDefinition)
+        {
+            return new[] { GetTypeFromTypeReference(methodDefinition.ReturnType) };
         }
 
         private static bool IsValidType(NetType t)

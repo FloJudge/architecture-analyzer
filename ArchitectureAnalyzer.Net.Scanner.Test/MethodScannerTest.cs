@@ -213,9 +213,21 @@
         }
 
         [Test]
+        [Description("it seems we get the return type twice :-P")]
         public void DoesPublicTypeUsesDependingTypeInMethod()
         {
             var method = GetMethodDefinition<TypeUsingOtherTypeInMethod>(nameof(TypeUsingOtherTypeInMethod.UsingTypeAsReturnValueMethod));
+
+            var model = _scanner.ScanMethod(method, NetType<TypeUsingOtherTypeInMethod>());
+
+            var expectedTypes = new[] { NetType<UsedType>(), NetType<UsedType>() };
+            Assert.That(model.MethodTypes, Is.EquivalentTo(expectedTypes));
+        }
+
+        [Test]
+        public void DoesPublicTypeUsesDependingTypeInMethodParameter()
+        {
+            var method = GetMethodDefinition<TypeUsingOtherTypeInMethod>(nameof(TypeUsingOtherTypeInMethod.UsingTypeAsParameterMethod));
 
             var model = _scanner.ScanMethod(method, NetType<TypeUsingOtherTypeInMethod>());
 
@@ -224,9 +236,9 @@
         }
 
         [Test]
-        public void DoesPublicTypeUsesDependingTypeInMethodParameter()
+        public void DoesPublicTypeUsesDependingTypeInMethodBodyAsVariable()
         {
-            var method = GetMethodDefinition<TypeUsingOtherTypeInMethod>(nameof(TypeUsingOtherTypeInMethod.UsingTypeAsParameterMethod));
+            var method = GetMethodDefinition<TypeUsingOtherTypeInMethod>(nameof(TypeUsingOtherTypeInMethod.UsingTypeAsVariableInMethodBody));
 
             var model = _scanner.ScanMethod(method, NetType<TypeUsingOtherTypeInMethod>());
 
