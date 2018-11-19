@@ -1,6 +1,7 @@
 ﻿namespace ArchitectureAnalyzer.Net.Scanner.Test
 {
     using System;
+    using System.Linq;
 
     using ArchitectureAnalyzer.Net.Model;
 
@@ -274,6 +275,16 @@
             var model = _scanner.ScanType(type, _assembly);
 
             Assert.That(model.Imports.Count, Is.EqualTo(expectedValue));
+        }
+
+        [Test]
+        public void DoesPublicTypeUsesDependingTypeInProperty()
+        {
+            var type = GetTypeDefintion<TypeUsingOtherTypeInPropertyReturnType>();
+
+            var model = _scanner.ScanType(type, _assembly);
+
+            Assert.That(model.Types.Any(), Is.True);
         }
     }
 }

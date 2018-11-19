@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using ArchitectureAnalyzer.Net.Model;
 
@@ -13,7 +14,7 @@
     public class MethodScannerTest : MetadataScannerTestBase
     {
         private MethodScanner _scanner;
-        
+
         [SetUp]
         public void SetupScanner()
         {
@@ -26,7 +27,7 @@
             typeScanner.ScanType(GetTypeDefintion<ClassWithMefUsages>(), assembly);
             typeScanner.ScanType(GetTypeDefintion<InheritedFromClassWithMembers>(), assembly);
         }
-        
+
         [Test]
         public void NameIsCorrect()
         {
@@ -53,7 +54,7 @@
             var method = GetMethodDefinition<ClassWithMembers>(nameof(ClassWithMembers.MethodWithParams));
 
             var model = _scanner.ScanMethod(method, NetType<ClassWithMembers>());
-            
+
             Assert.That(model.Parameters.Count, Is.EqualTo(2));
 
             Assert.That(model.Parameters[0].Name, Is.EqualTo("a"));
@@ -64,7 +65,7 @@
             Assert.That(model.Parameters[1].Order, Is.EqualTo(2));
             Assert.That(model.Parameters[1].Type.Name, Is.EqualTo(nameof(String)));
         }
-        
+
         [Test]
         public void GenericParametersAreCorrect()
         {
@@ -73,7 +74,7 @@
             var model = _scanner.ScanMethod(method, NetType<ClassWithMembers>());
 
             Assert.That(model.GenericParameters.Count, Is.EqualTo(1));
-            
+
             Assert.That(model.GenericParameters[0].Name, Is.EqualTo("TMethodArg"));
             Assert.That(model.GenericParameters[0].Type, Is.EqualTo(Net.Model.NetType.TypeClass.GenericTypeArg));
         }
@@ -82,7 +83,7 @@
         public void GenericMethodArgIsCorrect()
         {
             var method = GetMethodDefinition<ClassWithMembers>(nameof(ClassWithMembers.GenericMethodArg));
-            
+
             var model = _scanner.ScanMethod(method, NetType<ClassWithMembers>());
 
             Assert.That(model.Parameters.Count, Is.EqualTo(1));
@@ -116,7 +117,7 @@
             Assert.That(model.IsSealed, Is.False);
             Assert.That(model.IsGeneric, Is.False);
         }
-        
+
         [Test]
         public void IsSealedFlagIsSetForSealedMethod()
         {
@@ -179,7 +180,7 @@
 
             Assert.That(model.GenericParameters.Count, Is.EqualTo(0));
         }
-        
+
         [TestCase(nameof(ClassWithMefUsages.ExportMethod), 1)]
         [TestCase(nameof(ClassWithMefUsages.ExportMethodWithName), 1)]
         [TestCase(nameof(ClassWithMefUsages.ExportMethodWithType), 1)]
@@ -192,7 +193,7 @@
 
             Assert.That(model.Exports.Count, Is.EqualTo(expectedValue));
         }
-        
+
         [TestCase(nameof(ClassWithMefUsages.ImportMethodVoidType), 0)]
         [TestCase(nameof(ClassWithMefUsages.ImportMethodImportType), 1)]
         [TestCase(nameof(ClassWithMefUsages.ImportMethodWithName), 0)]
@@ -210,5 +211,17 @@
 
             Assert.That(model.Imports.Count, Is.EqualTo(expectedValue));
         }
+
+        [Test]
+        public void DoesPublicTypeUsesDependingTypeInMethod()
+        {
+            var method = GetMethodDefinition<TypeUsingOtherTypeInMethodReturnType>(nameof(TypeUsingOtherTypeInMethodReturnType.UsedTypeMethod));
+
+            var model = _scanner.ScanMethod(method, NetType<TypeUsingOtherTypeInMethodReturnType>());
+
+            var expectedTypes = new[] { NetType<UsedType>() };
+            Assert.That(model.MethodTypes, Is.EquivalentTo(expectedTypes));
+        }
+
     }
 }

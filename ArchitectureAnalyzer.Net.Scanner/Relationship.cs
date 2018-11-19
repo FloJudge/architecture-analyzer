@@ -3,7 +3,7 @@ namespace ArchitectureAnalyzer.Net.Scanner
 {
     public static class Relationship
     {
-        public static string USES_TYPE = "USES_TYPE";
+        public const string USES_TYPE = "USES_TYPE";
 
         public const string DEFINES_TYPE = "DEFINES_TYPE";
 

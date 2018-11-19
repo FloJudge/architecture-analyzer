@@ -147,7 +147,9 @@
 
             return variableTypes;
             */
-            return new List<NetType>();
+
+
+            return new List<NetType> { GetTypeFromTypeReference(methodDefinition.ReturnType) };
         }
     }
 }
