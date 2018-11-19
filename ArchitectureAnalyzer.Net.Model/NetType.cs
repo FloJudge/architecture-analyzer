@@ -75,6 +75,9 @@
         [Ignore]
         public IReadOnlyList<NetType> GenericTypeInstantiationArgs { get; set; }
 
+        [Ignore]
+        public IList<NetType> Types { get; set; }
+
 
         public NetType()
         {
@@ -86,6 +89,7 @@
             Methods = new List<NetMethod>();
             Properties = new List<NetProperty>();
             GenericTypeArgs = new List<NetType>();
+            Types = new List<NetType>();
         }
         
         public override string ToString()

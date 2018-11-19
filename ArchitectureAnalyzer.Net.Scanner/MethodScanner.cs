@@ -37,6 +37,8 @@
             methodModel.Exports = GetMefUsedInterfaces(method, nameof(AttributeType.Export));
             methodModel.Imports = GetMefUsedInterfaces(method, nameof(AttributeType.Import));
 
+            methodModel.MethodTypes = GetUsedTypesInMethodBody(method);
+
             return methodModel;
         }
 
@@ -131,6 +133,21 @@
             return paramAttribute == null
                        ? GetMefUsedTypesFromCustomAttribute(methodAttribute, attributeTypeName, parameter.ParameterType)
                        : GetMefUsedTypesFromCustomAttribute(paramAttribute, attributeTypeName, parameter.ParameterType);
+        }
+
+        private IList<NetType> GetUsedTypesInMethodBody(MethodDefinition methodDefinition)
+        {
+            /*var variableTypes = methodDefinition.Body.Variables.Select(variableDefinition => GetTypeFromTypeReference(variableDefinition.VariableType)).ToList();
+
+            var instructionTypes = new List<NetType>();
+            foreach (var instruction in methodDefinition.Body.Instructions)
+            {
+                
+            }
+
+            return variableTypes;
+            */
+            return new List<NetType>();
         }
     }
 }

@@ -37,11 +37,37 @@
             typeModel.Implements = GetImplementedInterfaces(type);
             typeModel.Exports = GetMefUsedInterfaces(type, nameof(AttributeType.Export));
             typeModel.Imports = GetMefUsedInterfaces(type, nameof(AttributeType.Import));
+            typeModel.Types = GetAllUsedTypes(typeModel.Properties, typeModel.Methods);
 
             typeModel.Attributes = GetAttributes(type);
             typeModel.BaseType = GetBaseType(type);
             
             return typeModel;
+        }
+
+        private IList<NetType> GetAllUsedTypes(IList<NetProperty> properties, IList<NetMethod> methods)
+        {
+            var propertyTypes = GetTypeFromProperties(properties);
+            var methodsTypes = GetTypeFromMethods(methods);
+            
+            return propertyTypes.Concat(methodsTypes).ToList();
+        }
+
+        private IEnumerable<NetType> GetTypeFromProperties(IEnumerable<NetProperty> properties)
+        {
+            return properties.Select(property => property.DeclaringType).ToList();
+        }
+        private List<NetType> GetTypeFromMethods(IList<NetMethod> methods)
+        {
+            var typesInParameters = new List<NetType>();
+            foreach (var method in methods)
+            {
+                typesInParameters.AddRange(method.Parameters.Select(netMethodParameter => netMethodParameter.Type));
+                typesInParameters.AddRange(method.GenericParameters.Select(netGenereicMethodParameter => netGenereicMethodParameter.BaseType));
+                typesInParameters.AddRange(method.MethodTypes.Select(type => type.BaseType));
+            }
+
+            return typesInParameters;
         }
 
         private string GetDisplayName(NetType typeModel)

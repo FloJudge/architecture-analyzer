@@ -35,6 +35,9 @@
 
         [Ignore]
         public IReadOnlyList<NetType> GenericParameters { get; set; }
+
+        [Ignore]
+        public IList<NetType> MethodTypes { get; set; }
         
         public NetMethod()
         {
