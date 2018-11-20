@@ -1,6 +1,5 @@
 ﻿namespace ArchitectureAnalyzer.Net.Scanner
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -138,28 +137,16 @@
 
         private IList<NetType> GetUsedTypesInMethodBody(MethodDefinition methodDefinition)
         {
-            /*var variableTypes = methodDefinition.Body.Variables.Select(variableDefinition => GetTypeFromTypeReference(variableDefinition.VariableType)).ToList();
-
-            var instructionTypes = new List<NetType>();
-            foreach (var instruction in methodDefinition.Body.Instructions)
-            {
-                
-            }
-
-            return variableTypes;
-            */
-
             var types = GetUsedParameterTypes(methodDefinition);
             var returnTypes = GetReturnTypes(methodDefinition);
             var typesInBody = GetTypesFromBody(methodDefinition);
 
-            return types.Concat(returnTypes).Concat(typesInBody).Where(IsValidType).ToList();
+            return types.Concat(returnTypes).Concat(typesInBody).Where(IsValidNetType).ToList();
         }
-
-        private IEnumerable<NetType> GetTypesFromBody(MethodDefinition methodDefinition)
+        
+        private IEnumerable<NetType> GetUsedParameterTypes(MethodDefinition methodDefinition)
         {
-            var variableTypes = methodDefinition.Body?.Variables.Select(variableDefinition => GetTypeFromTypeReference(variableDefinition.VariableType)).ToList();
-            return variableTypes ?? Enumerable.Empty<NetType>();
+            return methodDefinition.Parameters.Select(t => GetTypeFromTypeReference(t.ParameterType));
         }
 
         private IEnumerable<NetType> GetReturnTypes(MethodDefinition methodDefinition)
@@ -167,14 +154,17 @@
             return new[] { GetTypeFromTypeReference(methodDefinition.ReturnType) };
         }
 
-        private static bool IsValidType(NetType t)
+        private IEnumerable<NetType> GetTypesFromBody(MethodDefinition methodDefinition)
         {
-            return t!=null && !Equals(t.Name,"Void");
+            var variableTypes = GetTypesFromMethodVariables(methodDefinition);
+            // TODO add function to get type from instructions
+
+            return variableTypes ?? Enumerable.Empty<NetType>();
         }
 
-        private IEnumerable<NetType> GetUsedParameterTypes(MethodDefinition methodDefinition)
+        private IEnumerable<NetType> GetTypesFromMethodVariables(MethodDefinition methodDefinition)
         {
-            return methodDefinition.Parameters.Select(t => GetTypeFromTypeReference(t.ParameterType));
+            return methodDefinition.Body?.Variables.Select(variableDefinition => GetTypeFromTypeReference(variableDefinition.VariableType));
         }
     }
 }

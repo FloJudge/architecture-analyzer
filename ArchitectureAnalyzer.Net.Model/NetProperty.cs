@@ -26,10 +26,15 @@ namespace ArchitectureAnalyzer.Net.Model
         [Ignore]
         public IReadOnlyList<NetType> GenericParameters => NoGenericParameters;
 
+        [Ignore]
+        public IList<NetType> PropertyTypes { get; set; }
+
         public NetProperty()
         {
             Exports = new List<NetType>();
             Imports = new List<NetType>();
+
+            PropertyTypes = new List<NetType>();
         }
     }
 }

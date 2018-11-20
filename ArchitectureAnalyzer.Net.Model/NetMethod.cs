@@ -46,6 +46,8 @@
 
             Exports = new List<NetType>();
             Imports = new List<NetType>();
+
+            MethodTypes = new List<NetType>();
         }
         
         public override string ToString()

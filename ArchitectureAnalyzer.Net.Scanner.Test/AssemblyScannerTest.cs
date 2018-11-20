@@ -74,7 +74,7 @@
                                         nameof(TestFixtureAttributedClass),
                                         nameof(UserDefinedAttribute),
                                         nameof(UserTypeAttributedClass),
-                                        nameof(TypeUsingOtherTypeInPropertyReturnType),
+                                        nameof(TypeUsingOtherTypeInProperty),
                                         nameof(TypeUsingOtherTypeInMethod),
                                         nameof(UsedType)
                                     };

@@ -77,5 +77,27 @@ namespace ArchitectureAnalyzer.Net.Scanner.Test
 
             Assert.That(model.Imports.Count, Is.EqualTo(expectedValue));
         }
+
+        [Test]
+        public void DoesPublicTypeUsesDependingTypeTypeInPropertyGetter()
+        {
+            var property = GetPropertyDefinition<TypeUsingOtherTypeInProperty>(nameof(TypeUsingOtherTypeInProperty.UsedTypePropertyWithGetter));
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsingOtherTypeInProperty>());
+
+            var expectedTypes = new[] { NetType<UsedType>() };
+            Assert.That(model.PropertyTypes, Is.EquivalentTo(expectedTypes));
+        }
+
+        [Test]
+        public void DoesPublicTypeUsesDependingTypeTypeInPropertySetter()
+        {
+            var property = GetPropertyDefinition<TypeUsingOtherTypeInProperty>(nameof(TypeUsingOtherTypeInProperty.UsedTypePropertyWithSetter));
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsingOtherTypeInProperty>());
+
+            var expectedTypes = new[] { NetType<UsedType>() };
+            Assert.That(model.PropertyTypes, Is.EquivalentTo(expectedTypes));
+        }
     }
 }

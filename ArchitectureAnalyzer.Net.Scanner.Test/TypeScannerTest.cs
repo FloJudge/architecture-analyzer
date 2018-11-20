@@ -280,7 +280,7 @@
         [Test]
         public void DoesPublicTypeUsesDependingTypeInProperty()
         {
-            var type = GetTypeDefintion<TypeUsingOtherTypeInPropertyReturnType>();
+            var type = GetTypeDefintion<TypeUsingOtherTypeInProperty>();
 
             var model = _scanner.ScanType(type, _assembly);
 
