@@ -156,15 +156,10 @@
 
         private IEnumerable<NetType> GetTypesFromBody(MethodDefinition methodDefinition)
         {
-            var variableTypes = GetTypesFromMethodVariables(methodDefinition);
-            // TODO add function to get type from instructions
+            var variableTypes = GetTypesFromMethodVariables(methodDefinition.Body?.Variables);
+            var instructionTypes = GetTypesFromMethodInstructions(methodDefinition.Body?.Instructions);
 
             return variableTypes ?? Enumerable.Empty<NetType>();
-        }
-
-        private IEnumerable<NetType> GetTypesFromMethodVariables(MethodDefinition methodDefinition)
-        {
-            return methodDefinition.Body?.Variables.Select(variableDefinition => GetTypeFromTypeReference(variableDefinition.VariableType));
         }
     }
 }

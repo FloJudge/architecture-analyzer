@@ -40,8 +40,8 @@
 
         private IList<NetType> GetUsedTypesInPropertyBody(PropertyDefinition property)
         {
-            var typesInSetter = property.SetMethod?.Body?.Variables.Select(t => GetTypeFromTypeReference(t.VariableType)) ?? Enumerable.Empty<NetType>();
-            var typesInGetter = property.GetMethod?.Body?.Variables.Select(t => GetTypeFromTypeReference(t.VariableType)) ?? Enumerable.Empty<NetType>();
+            var typesInSetter = GetTypesFromMethodVariables(property.SetMethod?.Body?.Variables);
+            var typesInGetter = GetTypesFromMethodVariables(property.GetMethod?.Body?.Variables);
 
             return typesInSetter.Concat(typesInGetter).Where(IsNetType).ToList();
         }
