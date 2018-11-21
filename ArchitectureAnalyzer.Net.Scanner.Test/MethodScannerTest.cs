@@ -278,5 +278,16 @@
             var expectedTypes = new[] { NetType<Object>(), NetType<UsedType>() };
             Assert.That(model.MethodTypes, Is.EquivalentTo(expectedTypes));
         }
+
+        [Test]
+        public void DoesPublicTypeUsesDependingTypeInMethodBodyAsCollectionGeneric()
+        {
+            var method = GetMethodDefinition<TypeUsingOtherTypeInMethod>(nameof(TypeUsingOtherTypeInMethod.UsingTypeAsVariableListTypeInMethodBody));
+
+            var model = _scanner.ScanMethod(method, NetType<TypeUsingOtherTypeInMethod>());
+
+            var expectedTypes = new[] { NetType<List<UsedType>>(), NetType<UsedType>() };
+            Assert.That(model.MethodTypes, Is.EquivalentTo(expectedTypes));
+        }
     }
 }

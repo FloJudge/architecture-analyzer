@@ -53,9 +53,12 @@
             return propertyTypes.Concat(methodsTypes).ToList();
         }
 
-        private IEnumerable<NetType> GetTypeFromProperties(IEnumerable<NetProperty> properties)
+        private IList<NetType> GetTypeFromProperties(IEnumerable<NetProperty> properties)
         {
-            return properties.Select(property => property.DeclaringType).ToList();
+            var usedTypeInProperties = properties.SelectMany(property => property.PropertyTypes).ToList();
+            var declarationTypeOfProperties = properties.Select(property => property.DeclaringType).ToList();
+
+            return usedTypeInProperties.Concat(declarationTypeOfProperties).ToList();
         }
         private List<NetType> GetTypeFromMethods(IList<NetMethod> methods)
         {

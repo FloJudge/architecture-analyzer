@@ -14,7 +14,7 @@
 
         public void UsingTypeAsMethodParamaterType(UsedType usedType)
         {
-            
+
         }
 
         public void UsingTypeAsVariableTypeInMethodBody()
