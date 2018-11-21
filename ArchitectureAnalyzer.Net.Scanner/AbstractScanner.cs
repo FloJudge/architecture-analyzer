@@ -68,24 +68,29 @@
 
         protected IEnumerable<NetType> GetTypesFromMethodVariables(ICollection<VariableDefinition> variables)
         {
+            var genericTypeArgs = GetTypesFromGenericEnumerable(variables);
+            var variableTypes = variables?.Select(variable => GetTypeFromTypeReference(variable.VariableType)) ?? Enumerable.Empty<NetType>();
+
+            return variableTypes.Concat(genericTypeArgs);
+        }
+
+        private IEnumerable<NetType> GetTypesFromGenericEnumerable(ICollection<VariableDefinition> variables)
+        {
             if (variables == null)
             {
                 return Enumerable.Empty<NetType>();
             }
 
-            IEnumerable<NetType> genericTypeArgs = Enumerable.Empty<NetType>();
+            var genericTypeArgs = Enumerable.Empty<NetType>();
             foreach (var variableDefinition in variables)
             {
-                if (variableDefinition.VariableType.IsGenericInstance)
+                if (variableDefinition.VariableType is GenericInstanceType genericType)
                 {
-                    var genericType = (GenericInstanceType)variableDefinition.VariableType;
                     genericTypeArgs = genericType.GenericArguments?.Select(argument => GetTypeFromTypeReference(argument.GetElementType())) ?? Enumerable.Empty<NetType>();
                 }
             }
 
-            var variableTypes = variables?.Select(variable => GetTypeFromTypeReference(variable.VariableType)) ?? Enumerable.Empty<NetType>();
-
-            return variableTypes.Concat(genericTypeArgs);
+            return genericTypeArgs;
         }
 
         protected IEnumerable<NetType> GetTypesFromMethodInstructions(ICollection<Instruction> instructions)
