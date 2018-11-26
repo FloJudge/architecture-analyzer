@@ -81,21 +81,20 @@
                 return Enumerable.Empty<NetType>();
             }
 
-            var genericTypeArgs = Enumerable.Empty<NetType>();
-            foreach (var variableDefinition in variables)
-            {
-                if (variableDefinition.VariableType is GenericInstanceType genericType)
-                {
-                    genericTypeArgs = genericType.GenericArguments?.Select(argument => GetTypeFromTypeReference(argument.GetElementType())) ?? Enumerable.Empty<NetType>();
-                }
-            }
+            return variables.Where(varType => varType.VariableType is GenericInstanceType).SelectMany(
+                varType => GetTypesFromGeneric(varType.VariableType as GenericInstanceType)).Distinct();
+        }
 
-            return genericTypeArgs;
+        private IEnumerable<NetType> GetTypesFromGeneric(GenericInstanceType genericType)
+        {
+            return genericType.GenericArguments?.Select(argument => GetTypeFromTypeReference(argument.GetElementType())) ?? Enumerable.Empty<NetType>();
         }
 
         protected IEnumerable<NetType> GetTypesFromMethodInstructions(ICollection<Instruction> instructions)
         {
-            var typesFromInstructions = instructions?.Select(instruction => instruction);
+            var typesFromInstructions = instructions?
+                .Where(i => i.Operand != null)
+                .Select(instruction => instruction.Operand.GetType());
             return Enumerable.Empty<NetType>();
         }
 

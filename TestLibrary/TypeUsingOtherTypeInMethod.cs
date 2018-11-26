@@ -19,7 +19,9 @@
 
         public void UsingTypeAsVariableTypeInMethodBody()
         {
+#pragma warning disable CS0168 // Variable is declared but never used
             UsedType usedType;
+#pragma warning restore CS0168 // Variable is declared but never used
         }
 
         public void UsingTypeAsVariableAssignedTypeInMethodBody()
@@ -44,9 +46,25 @@
             var list = new List<UsedType>();
         }
 
+        public void UsingDifferentTypesAsGenericArgumentsInMethodBody()
+        {
+            var value = new Tuple<UsedType, bool>(null, false);
+        }
+
+        public void UsingDifferentTypesInMultipleVariablesAsGenericArgumentsInMethodBody()
+        {
+            var value1 = new Tuple<UsedType, bool>(null, false);
+            var value2 = new Tuple<int, float>(0, 0.0f);
+        }
+
+        public void UsingSameTypeAsGenericArgumentsInMethodBody()
+        {
+            var value = new Tuple<UsedType, UsedType>(null, null);
+        }
+
         public void UsingTypeAsElementTypeInACollectionInMethodBody()
         {
-            var list = new[] { new UsedType() };
+            var list = new [] { new UsedType() };
         }
 
         public void UsingTypeInTypeOfInMethodBody()

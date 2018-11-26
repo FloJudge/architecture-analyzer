@@ -289,5 +289,49 @@
             var expectedTypes = new[] { NetType<List<UsedType>>(), NetType<UsedType>() };
             Assert.That(model.MethodTypes, Is.EquivalentTo(expectedTypes));
         }
+
+        [Test]
+        public void DoesPublicTypeUsesDifferentTypesAsGenericArgumentsInMethodBody()
+        {
+            var method = GetMethodDefinition<TypeUsingOtherTypeInMethod>(nameof(TypeUsingOtherTypeInMethod.UsingDifferentTypesAsGenericArgumentsInMethodBody));
+
+            var model = _scanner.ScanMethod(method, NetType<TypeUsingOtherTypeInMethod>());
+
+            var expectedTypes = new[] { NetType<Tuple<UsedType, bool>>(), NetType<UsedType>(), NetType<bool>() };
+            Assert.That(model.MethodTypes, Is.EquivalentTo(expectedTypes));
+        }
+
+        [Test]
+        public void DoesPublicTypeUsesDifferentTypesInMultipleVariablesAsGenericArgumentsInMethodBody()
+        {
+            var method = GetMethodDefinition<TypeUsingOtherTypeInMethod>(nameof(TypeUsingOtherTypeInMethod.UsingDifferentTypesInMultipleVariablesAsGenericArgumentsInMethodBody));
+
+            var model = _scanner.ScanMethod(method, NetType<TypeUsingOtherTypeInMethod>());
+
+            var expectedTypes = new[] { NetType<Tuple<UsedType, bool>>(), NetType<Tuple<int, float>>(), NetType<UsedType>(), NetType<bool>(), NetType<int>(), NetType<float>() };
+            Assert.That(model.MethodTypes, Is.EquivalentTo(expectedTypes));
+        }
+
+        [Test]
+        public void DoesPublicTypeUsesSameTypeAsGenericArgumentsInMethodBody()
+        {
+            var method = GetMethodDefinition<TypeUsingOtherTypeInMethod>(nameof(TypeUsingOtherTypeInMethod.UsingSameTypeAsGenericArgumentsInMethodBody));
+
+            var model = _scanner.ScanMethod(method, NetType<TypeUsingOtherTypeInMethod>());
+
+            var expectedTypes = new[] { NetType<Tuple<UsedType, UsedType>>(), NetType<UsedType>() };
+            Assert.That(model.MethodTypes, Is.EquivalentTo(expectedTypes));
+        }
+
+        [Test]
+        public void DoesPublicTypeUsesTypeAsElementTypeInACollectionInMethodBody()
+        {
+            var method = GetMethodDefinition<TypeUsingOtherTypeInMethod>(nameof(TypeUsingOtherTypeInMethod.UsingTypeAsElementTypeInACollectionInMethodBody));
+
+            var model = _scanner.ScanMethod(method, NetType<TypeUsingOtherTypeInMethod>());
+
+            var expectedTypes = new[] { NetType<List<UsedType>>(), NetType<UsedType>() };
+            Assert.That(model.MethodTypes, Is.EquivalentTo(expectedTypes));
+        }
     }
 }
