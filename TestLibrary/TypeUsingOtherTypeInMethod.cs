@@ -57,6 +57,21 @@
             var value2 = new Tuple<int, float>(0, 0.0f);
         }
 
+        public void UsingDifferentTypesInListTupleAsGenericArgumentsInMethodBody()
+        {
+            var value = new List<Tuple<UsedType, bool>>() { new Tuple<UsedType, bool>(null, false)};
+        }
+
+        public void UsingDifferentTypesInListActionAsGenericArgumentsInMethodBody()
+        {
+            var value = new List<Action<UsedType>>() { new Action<UsedType>(type => {})};
+        }
+
+        public void UsingDifferentTypesInListListAsGenericArgumentsInMethodBody()
+        {
+            var value = new List<List<UsedType>>() { new List<UsedType>()};
+        }
+
         public void UsingSameTypeAsGenericArgumentsInMethodBody()
         {
             var value = new Tuple<UsedType, UsedType>(null, null);

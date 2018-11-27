@@ -1,6 +1,7 @@
 ﻿namespace ArchitectureAnalyzer.Net.Scanner.Test
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -286,7 +287,7 @@
 
             var model = _scanner.ScanMethod(method, NetType<TypeUsingOtherTypeInMethod>());
 
-            var expectedTypes = new[] { NetType<List<UsedType>>(), NetType<UsedType>() };
+            var expectedTypes = new[] { NetType(typeof(List<>)), NetType<UsedType>() };
             Assert.That(model.MethodTypes, Is.EquivalentTo(expectedTypes));
         }
 
@@ -297,7 +298,7 @@
 
             var model = _scanner.ScanMethod(method, NetType<TypeUsingOtherTypeInMethod>());
 
-            var expectedTypes = new[] { NetType<Tuple<UsedType, bool>>(), NetType<UsedType>(), NetType<bool>() };
+            var expectedTypes = new[] { NetType(typeof(Tuple<,>)), NetType<UsedType>(), NetType<bool>() };
             Assert.That(model.MethodTypes, Is.EquivalentTo(expectedTypes));
         }
 
@@ -308,7 +309,7 @@
 
             var model = _scanner.ScanMethod(method, NetType<TypeUsingOtherTypeInMethod>());
 
-            var expectedTypes = new[] { NetType<Tuple<UsedType, bool>>(), NetType<Tuple<int, float>>(), NetType<UsedType>(), NetType<bool>(), NetType<int>(), NetType<float>() };
+            var expectedTypes = new[] { NetType(typeof(Tuple<,>)), NetType(typeof(Tuple<,>)), NetType<UsedType>(), NetType<bool>(), NetType<int>(), NetType<float>() };
             Assert.That(model.MethodTypes, Is.EquivalentTo(expectedTypes));
         }
 
@@ -319,7 +320,7 @@
 
             var model = _scanner.ScanMethod(method, NetType<TypeUsingOtherTypeInMethod>());
 
-            var expectedTypes = new[] { NetType<Tuple<UsedType, UsedType>>(), NetType<UsedType>() };
+            var expectedTypes = new[] { NetType(typeof(Tuple<,>)), NetType<UsedType>() };
             Assert.That(model.MethodTypes, Is.EquivalentTo(expectedTypes));
         }
 
@@ -330,7 +331,40 @@
 
             var model = _scanner.ScanMethod(method, NetType<TypeUsingOtherTypeInMethod>());
 
-            var expectedTypes = new[] { NetType<List<UsedType>>(), NetType<UsedType>() };
+            var expectedTypes = new[] { NetType<UsedType>() };
+            Assert.That(model.MethodTypes, Is.EquivalentTo(expectedTypes));
+        }
+        
+        [Test]
+        public void DoesPublicTypeUsesDifferentTypesInListTupleAsGenericArgumentsInMethodBody()
+        {
+            var method = GetMethodDefinition<TypeUsingOtherTypeInMethod>(nameof(TypeUsingOtherTypeInMethod.UsingDifferentTypesInListTupleAsGenericArgumentsInMethodBody));
+
+            var model = _scanner.ScanMethod(method, NetType<TypeUsingOtherTypeInMethod>());
+
+            var expectedTypes = new[] { NetType(typeof(List<>)), NetType(typeof(Tuple<,>)), NetType<UsedType>(), NetType<bool>() };
+            Assert.That(model.MethodTypes, Is.EquivalentTo(expectedTypes));
+        }
+
+        [Test]
+        public void DoesPublicTypeUsesDifferentTypesInListActionAsGenericArgumentsInMethodBody()
+        {
+            var method = GetMethodDefinition<TypeUsingOtherTypeInMethod>(nameof(TypeUsingOtherTypeInMethod.UsingDifferentTypesInListActionAsGenericArgumentsInMethodBody));
+
+            var model = _scanner.ScanMethod(method, NetType<TypeUsingOtherTypeInMethod>());
+
+            var expectedTypes = new[] { NetType(typeof(List<>)), NetType(typeof(Action<>)), NetType<UsedType>() };
+            Assert.That(model.MethodTypes, Is.EquivalentTo(expectedTypes));
+        }
+
+        [Test]
+        public void DoesPublicTypeUsesDifferentTypesInListListAsGenericArgumentsInMethodBody()
+        {
+            var method = GetMethodDefinition<TypeUsingOtherTypeInMethod>(nameof(TypeUsingOtherTypeInMethod.UsingDifferentTypesInListListAsGenericArgumentsInMethodBody));
+
+            var model = _scanner.ScanMethod(method, NetType<TypeUsingOtherTypeInMethod>());
+
+            var expectedTypes = new[] { NetType(typeof(List<>)), NetType(typeof(List<>)), NetType<UsedType>() };
             Assert.That(model.MethodTypes, Is.EquivalentTo(expectedTypes));
         }
     }
