@@ -68,43 +68,17 @@
 
         protected IEnumerable<NetType> GetTypesFromMethodVariables(ICollection<VariableDefinition> variables)
         {
-            var genericTypeArgs = GetTypesFromGenericEnumerable(variables);
-            var variableTypes = variables?.Select(variable => GetTypeFromTypeReference(variable.VariableType.GetElementType())) ?? Enumerable.Empty<NetType>();
-
-            return variableTypes.Concat(genericTypeArgs);
+            var variableTypes = variables?.Select(variableDefition => GetTypeFromTypeReference(variableDefition.VariableType));
+            
+            return variableTypes ?? Enumerable.Empty<NetType>();
         }
-
-        private IEnumerable<NetType> GetTypesFromGenericEnumerable(ICollection<VariableDefinition> variables)
-        {
-            if (variables == null)
-            {
-                return Enumerable.Empty<NetType>();
-            }
-
-            return variables.Where(varType => varType.VariableType is GenericInstanceType).SelectMany(
-                varType => GetTypesFromGeneric(varType.VariableType as GenericInstanceType)).Distinct();
-        }
-
-        private IEnumerable<NetType> GetTypesFromGeneric(GenericInstanceType genericType)
-        {
-            var typesInGenericGeneric = GetTypesFromInnerGeneric(genericType) ?? Enumerable.Empty<NetType>();
-            var typesInGeneric = genericType.GenericArguments?.Select(argument => GetTypeFromTypeReference(argument.GetElementType())) ?? Enumerable.Empty<NetType>();
-
-            return typesInGeneric.Concat(typesInGenericGeneric);
-        }
-
-        private IEnumerable<NetType> GetTypesFromInnerGeneric(GenericInstanceType genericType)
-        {
-           return genericType.GenericArguments
-                ?.Where(genericArgument => genericArgument is GenericInstanceType).SelectMany(
-                    genericArgument => GetTypesFromGeneric(genericArgument as GenericInstanceType)).Distinct();
-        }
-
+        
         protected IEnumerable<NetType> GetTypesFromMethodInstructions(ICollection<Instruction> instructions)
         {
             var typesFromInstructions = instructions?
                 .Where(i => i.Operand != null)
                 .Select(instruction => instruction.Operand.GetType());
+
             return Enumerable.Empty<NetType>();
         }
 

@@ -6,8 +6,10 @@ namespace ArchitectureAnalyzer.Net.Model
 {
     using ArchitectureAnalyzer.Core.Graph;
 
-    public class NetField : Node
+    public class NetField : Node, IGenericContext
     {
+        private static readonly IReadOnlyList<NetType> NoGenericParameters = new NetType[0];
+
         public string Name { get; set; }
 
         [Ignore]
@@ -22,6 +24,8 @@ namespace ArchitectureAnalyzer.Net.Model
         [Ignore]
         public NetType DeclaringType { get; set; }
 
+        [Ignore]
+        public IReadOnlyList<NetType> GenericParameters => NoGenericParameters;
 
         public NetField()
         {

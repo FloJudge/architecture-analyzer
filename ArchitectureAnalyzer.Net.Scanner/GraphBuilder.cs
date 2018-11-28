@@ -144,8 +144,9 @@ namespace ArchitectureAnalyzer.Net.Scanner
                     ConnectInterfaceImplementations(type, tx);
                     ConnectMethods(type, tx);
                     ConnectProperties(type, tx);
+                    ConnectFields(type, tx);
                     ConnectAttributes(type, tx);
-                    ConnectMefUsedInterfaces(type, tx);
+                    ConnectMefUsedInTypes(type, tx);
                     ConnectGenericTypeArgs(type, tx);
                     ConnectGenericTypeInstantiation(type, tx);
                 }
@@ -184,7 +185,7 @@ namespace ArchitectureAnalyzer.Net.Scanner
             }
         }
 
-        private void ConnectMefUsedInterfaces(NetType type, IGraphDatabaseTransaction tx)
+        private void ConnectMefUsedInTypes(NetType type, IGraphDatabaseTransaction tx)
         {
             foreach (var typeExport in type.Exports)
             {
@@ -221,10 +222,10 @@ namespace ArchitectureAnalyzer.Net.Scanner
 
             ConnectMethodParameters(method, tx);
             ConnectGenericMethodParameters(method, tx);
-            ConnectMefUsages(type, method, tx);
+            ConnectMefUsagesInMethod(type, method, tx);
         }
 
-        private void ConnectMefUsages(NetType type, NetMethod method, IGraphDatabaseTransaction tx)
+        private void ConnectMefUsagesInMethod(NetType type, NetMethod method, IGraphDatabaseTransaction tx)
         {
             foreach (var export in method.Exports)
             {
@@ -290,15 +291,7 @@ namespace ArchitectureAnalyzer.Net.Scanner
             {
                 ConnectProperty(type, property, tx);
 
-                foreach (var exportType in property.Exports)
-                {
-                    tx.CreateRelationship(type, exportType, Relationship.EXPORTS);
-                }
-
-                foreach (var importType in property.Imports)
-                {
-                    tx.CreateRelationship(type, importType, Relationship.IMPORTS);
-                }
+                ConnectMefUsageInProperties(type, tx, property);
             }
         }
 
@@ -306,6 +299,47 @@ namespace ArchitectureAnalyzer.Net.Scanner
         {
             tx.CreateRelationship(type, property, Relationship.DEFINES_PROPERTY);
             tx.CreateRelationship(property, property.Type, Relationship.HAS_TYPE);
+        }
+
+        private static void ConnectMefUsageInProperties(NetType type, IGraphDatabaseTransaction tx, NetProperty property)
+        {
+            foreach (var exportType in property.Exports)
+            {
+                tx.CreateRelationship(type, exportType, Relationship.EXPORTS);
+            }
+
+            foreach (var importType in property.Imports)
+            {
+                tx.CreateRelationship(type, importType, Relationship.IMPORTS);
+            }
+        }
+
+        private void ConnectFields(NetType type, IGraphDatabaseTransaction tx)
+        {
+            foreach (var field in type.Fields)
+            {
+                ConnectField(type, field, tx);
+                ConnectMefUsageInFields(type, field, tx);
+            }
+        }
+
+        private static void ConnectField(NetType type, NetField field, IGraphDatabaseTransaction tx)
+        {
+            tx.CreateRelationship(type, field, Relationship.DEFINES_FIELD);
+            tx.CreateRelationship(field, field.Type, Relationship.HAS_TYPE);
+        }
+
+        private static void ConnectMefUsageInFields(NetType type, NetField field, IGraphDatabaseTransaction tx)
+        {
+            foreach (var exportType in field.Exports)
+            {
+                tx.CreateRelationship(type, exportType, Relationship.EXPORTS);
+            }
+
+            foreach (var importType in field.Imports)
+            {
+                tx.CreateRelationship(type, importType, Relationship.IMPORTS);
+            }
         }
     }
 }

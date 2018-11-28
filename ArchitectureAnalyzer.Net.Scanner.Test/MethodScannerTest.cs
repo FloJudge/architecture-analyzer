@@ -214,35 +214,13 @@
         }
 
         [Test]
-        public void DoesMethodUsesTypeAsReturnType()
-        {
-            var method = GetMethodDefinition<TypeUsageInMethod>(nameof(TypeUsageInMethod.ReturnTypeMethod));
-
-            var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
-
-            var expectedTypes = new[] { NetType<UsedType>(), NetType<UsedType>() };
-            Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
-        }
-
-        [Test]
-        public void DoesMethodUsesTypeAsMethodParameterType()
-        {
-            var method = GetMethodDefinition<TypeUsageInMethod>(nameof(TypeUsageInMethod.MethodParameterTypeMethod));
-
-            var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
-
-            var expectedTypes = new[] { NetType<UsedType>() };
-            Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
-        }
-
-        [Test]
         public void DoesMethodUsesTypeAsTypeDeclaration()
         {
             var method = GetMethodDefinition<TypeUsageInMethod>(nameof(TypeUsageInMethod.TypeDeclarationInMethod));
 
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
-            var expectedTypes = new[] { NetType<UsedType>() };
+            var expectedTypes = new[] { NetType(typeof(UsedType)) };
             Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
         }
 
@@ -253,7 +231,7 @@
 
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
-            var expectedTypes = new[] { NetType<UsedType>() };
+            var expectedTypes = new[] { NetType(typeof(UsedType)) };
             Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
         }
 
@@ -275,7 +253,7 @@
 
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
-            var expectedTypes = new[] { NetType<Object>(), NetType<UsedType>() };
+            var expectedTypes = new[] { NetType(typeof(Object)), NetType(typeof(UsedType)) };
             Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
         }
 
@@ -286,31 +264,31 @@
 
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
-            var expectedTypes = new[] { NetType(typeof(List<>)), NetType<UsedType>() };
+            var expectedTypes = new[] { NetType(typeof(List<UsedType>)) };
             Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
         }
 
-        [Test]
+       [Test]
         public void DoesMethodUsesInitTypeInTuple()
         {
             var method = GetMethodDefinition<TypeUsageInMethod>(nameof(TypeUsageInMethod.InitTypesInTupleInMethod));
 
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
-
-            var expectedTypes = new[] { NetType(typeof(Tuple<,>)), NetType<UsedType>(), NetType<bool>() };
+            
+            var expectedTypes = new[] { NetType(typeof(Tuple<UsedType, bool>)) };
             Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
         }
 
-        [Test]
-        public void DoesMethodUsesInitMultipleTypesInMultipleTuples()
-        {
-            var method = GetMethodDefinition<TypeUsageInMethod>(nameof(TypeUsageInMethod.InitMultipleTypesInMultipleTupleInMethod));
+       [Test]
+       public void DoesMethodUsesInitMultipleTypesInMultipleTuples()
+       {
+           var method = GetMethodDefinition<TypeUsageInMethod>(nameof(TypeUsageInMethod.InitMultipleTypesInMultipleTupleInMethod));
 
-            var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
+           var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
-            var expectedTypes = new[] { NetType(typeof(Tuple<,>)), NetType(typeof(Tuple<,>)), NetType<UsedType>(), NetType<bool>(), NetType<int>(), NetType<float>() };
-            Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
-        }
+           var expectedTypes = new[] { NetType(typeof(Tuple<UsedType, bool>)), NetType(typeof(Tuple<int, float>)) };
+           Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
+       }
 
         [Test]
         public void DoesMethodUsesInitTupleWithSameTypes()
@@ -319,7 +297,7 @@
 
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
-            var expectedTypes = new[] { NetType(typeof(Tuple<,>)), NetType<UsedType>() };
+            var expectedTypes = new[] { NetType(typeof(Tuple<UsedType, UsedType>)) };
             Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
         }
 
@@ -330,10 +308,10 @@
 
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
-            var expectedTypes = new[] { NetType<UsedType>() };
+            var expectedTypes = new[] { NetType(typeof(UsedType[])) };
             Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
         }
-        
+
         [Test]
         public void DoesMethodUsesInitListTupleTypes()
         {
@@ -341,7 +319,7 @@
 
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
-            var expectedTypes = new[] { NetType(typeof(List<>)), NetType(typeof(Tuple<,>)), NetType<UsedType>(), NetType<bool>() };
+            var expectedTypes = new[] { NetType(typeof(List<Tuple<UsedType, bool>>)) };
             Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
         }
 
@@ -352,7 +330,7 @@
 
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
-            var expectedTypes = new[] { NetType(typeof(List<>)), NetType(typeof(Action<>)), NetType<UsedType>() };
+            var expectedTypes = new[] { NetType(typeof(List<Action<UsedType>>)) };
             Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
         }
 
@@ -363,7 +341,7 @@
 
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
-            var expectedTypes = new[] { NetType(typeof(List<>)), NetType(typeof(List<>)), NetType<UsedType>() };
+            var expectedTypes = new[] { NetType(typeof(List<List<UsedType>>))};
             Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
         }
     }

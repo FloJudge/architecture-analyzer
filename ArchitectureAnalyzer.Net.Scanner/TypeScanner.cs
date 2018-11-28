@@ -161,7 +161,9 @@
         {
             var fieldScanner = new FieldScanner(Module, Factory, Logger);
 
-            return type.Fields.Select(field => fieldScanner.ScanField(field, typeModel)).ToList();
+            return type.Fields
+                .Select(field => fieldScanner.ScanField(field, typeModel))
+                .ToList();
         }
 
         private IList<NetType> GetImplementedInterfaces(TypeDefinition type)

@@ -7,16 +7,6 @@
 
     public class TypeUsageInMethod
     {
-        public UsedType ReturnTypeMethod()
-        {
-            return null;
-        }
-
-        public void MethodParameterTypeMethod(UsedType usedType)
-        {
-
-        }
-
         public void TypeDeclarationInMethod()
         {
 #pragma warning disable CS0168 // Variable is declared but never used

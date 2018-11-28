@@ -137,29 +137,10 @@
 
         private IList<NetType> GetUsedTypesInMethodBody(MethodDefinition methodDefinition)
         {
-            var types = GetUsedParameterTypes(methodDefinition);
-            var returnTypes = GetReturnTypes(methodDefinition);
-            var typesInBody = GetTypesFromBody(methodDefinition);
-
-            return types.Concat(returnTypes).Concat(typesInBody).Where(IsValidNetType).ToList();
-        }
-        
-        private IEnumerable<NetType> GetUsedParameterTypes(MethodDefinition methodDefinition)
-        {
-            return methodDefinition.Parameters.Select(t => GetTypeFromTypeReference(t.ParameterType));
-        }
-
-        private IEnumerable<NetType> GetReturnTypes(MethodDefinition methodDefinition)
-        {
-            return new[] { GetTypeFromTypeReference(methodDefinition.ReturnType) };
-        }
-
-        private IEnumerable<NetType> GetTypesFromBody(MethodDefinition methodDefinition)
-        {
             var variableTypes = GetTypesFromMethodVariables(methodDefinition.Body?.Variables);
             var instructionTypes = GetTypesFromMethodInstructions(methodDefinition.Body?.Instructions);
 
-            return variableTypes ?? Enumerable.Empty<NetType>();
+            return variableTypes.ToList();
         }
     }
 }
