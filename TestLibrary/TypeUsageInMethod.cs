@@ -5,84 +5,84 @@
 
     using NUnit.Framework;
 
-    public class TypeUsingOtherTypeInMethod
+    public class TypeUsageInMethod
     {
-        public UsedType UsingTypeAsMethodReturnType()
+        public UsedType ReturnTypeMethod()
         {
             return null;
         }
 
-        public void UsingTypeAsMethodParamaterType(UsedType usedType)
+        public void MethodParameterTypeMethod(UsedType usedType)
         {
 
         }
 
-        public void UsingTypeAsVariableTypeInMethodBody()
+        public void TypeDeclarationInMethod()
         {
 #pragma warning disable CS0168 // Variable is declared but never used
             UsedType usedType;
 #pragma warning restore CS0168 // Variable is declared but never used
         }
 
-        public void UsingTypeAsVariableAssignedTypeInMethodBody()
+        public void InitTypeInMethod()
         {
             var usedType = new UsedType();
         }
 
-        public void UsingTypeAsVariableSafeCastTypeInMethodBody()
+        public void TypeSafeCastInMethod()
         {
             var noType = new Object();
             var usedType = noType as UsedType;
         }
 
-        public void UsingTypeAsVariableCastTypeInMethodBody()
+        public void TypeCastInMethod()
         {
             var noType = new Object();
             var usedType = (UsedType)noType;
         }
 
-        public void UsingTypeAsVariableListTypeInMethodBody()
+        public void InitListTypeInMethod()
         {
             var list = new List<UsedType>();
         }
 
-        public void UsingDifferentTypesAsGenericArgumentsInMethodBody()
+        public void InitTypesInTupleInMethod()
         {
             var value = new Tuple<UsedType, bool>(null, false);
         }
 
-        public void UsingDifferentTypesInMultipleVariablesAsGenericArgumentsInMethodBody()
+        public void InitMultipleTypesInMultipleTupleInMethod()
         {
             var value1 = new Tuple<UsedType, bool>(null, false);
             var value2 = new Tuple<int, float>(0, 0.0f);
         }
 
-        public void UsingDifferentTypesInListTupleAsGenericArgumentsInMethodBody()
+        public void InitListTupleTypesInMethod()
         {
             var value = new List<Tuple<UsedType, bool>>() { new Tuple<UsedType, bool>(null, false)};
         }
 
-        public void UsingDifferentTypesInListActionAsGenericArgumentsInMethodBody()
+        public void InitListActionTypeInMethod()
         {
             var value = new List<Action<UsedType>>() { new Action<UsedType>(type => {})};
         }
 
-        public void UsingDifferentTypesInListListAsGenericArgumentsInMethodBody()
+        public void InitListListTypeInMethod()
         {
             var value = new List<List<UsedType>>() { new List<UsedType>()};
         }
 
-        public void UsingSameTypeAsGenericArgumentsInMethodBody()
+        public void InitTupleWithSameTypesInMethod()
         {
             var value = new Tuple<UsedType, UsedType>(null, null);
         }
 
-        public void UsingTypeAsElementTypeInACollectionInMethodBody()
+        public void InitDynamicListTypInMethod()
         {
             var list = new [] { new UsedType() };
         }
 
-        public void UsingTypeInTypeOfInMethodBody()
+        public void InitTypeOfTypeInMethod()
         {
             var ofType = typeof(UsedType);
         }

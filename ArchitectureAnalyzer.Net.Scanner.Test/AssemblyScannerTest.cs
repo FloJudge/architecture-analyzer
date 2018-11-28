@@ -75,7 +75,7 @@
                                         nameof(UserDefinedAttribute),
                                         nameof(UserTypeAttributedClass),
                                         nameof(TypeUsingOtherTypeInProperty),
-                                        nameof(TypeUsingOtherTypeInMethod),
+                                        nameof(TypeUsageInMethod),
                                         nameof(UsedType)
                                     };
 
