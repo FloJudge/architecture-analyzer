@@ -1,14 +1,13 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace ArchitectureAnalyzer.Net.Model
 {
-    using System.Collections.Generic;
-
     using ArchitectureAnalyzer.Core.Graph;
-    
-    public class NetProperty : Node, IGenericContext
-    {
-        private static readonly IReadOnlyList<NetType> NoGenericParameters = new NetType[0];
 
+    public class NetField : Node
+    {
         public string Name { get; set; }
 
         [Ignore]
@@ -23,18 +22,11 @@ namespace ArchitectureAnalyzer.Net.Model
         [Ignore]
         public NetType DeclaringType { get; set; }
 
-        [Ignore]
-        public IReadOnlyList<NetType> GenericParameters => NoGenericParameters;
 
-        [Ignore]
-        public IList<NetType> TypesInPropertyBody { get; set; }
-
-        public NetProperty()
+        public NetField()
         {
             Exports = new List<NetType>();
             Imports = new List<NetType>();
-
-            TypesInPropertyBody = new List<NetType>();
         }
     }
 }

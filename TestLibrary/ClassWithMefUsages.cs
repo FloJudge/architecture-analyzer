@@ -3,6 +3,50 @@
     [Export(typeof(IMefUsage))]
     public abstract class ClassWithMefUsages : IMefUsage
     {
+        #region Import MEF Field
+
+        [Import]
+        public IMefUsage ImportField;
+
+        [Import(typeof(IMefUsage))]
+        public IMefUsage ImportFieldWithType;
+
+        [Import("Name")]
+        public IMefUsage ImportFieldWithName;
+
+        [Import("Name", typeof(IMefUsage))]
+        public IMefUsage ImportFieldWithNameAndType;
+
+        [ImportMany]
+        public IMefUsage ImportManyField;
+
+        [ImportMany("Name")]
+        public IMefUsage ImportManyFieldWithName;
+
+        [ImportMany(typeof(IMefUsage))]
+        public IMefUsage ImportManyFieldWithType;
+
+        [ImportMany("Name", typeof(IMefUsage))]
+        public IMefUsage ImportManyFieldWithNameAndType;
+
+        #endregion
+
+        #region Export MEF Field
+
+        [Export]
+        public IMefUsage ExportField;
+
+        [Export("Name")]
+        public IMefUsage ExportFieldWithName;
+
+        [Export(typeof(IMefUsage))]
+        public IMefUsage ExportFieldWithType;
+
+        [Export("Name", typeof(IMefUsage))]
+        public IMefUsage ExportFieldWithNameAndType;
+
+        #endregion
+
         #region Import MEF Property
 
         [Import]

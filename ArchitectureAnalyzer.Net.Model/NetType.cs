@@ -64,6 +64,9 @@
         public IList<NetProperty> Properties { get; set; }
 
         [Ignore]
+        public IList<NetField> Fields { get; set; }
+
+        [Ignore]
         public IList<NetType> GenericTypeArgs { get; set; }
         
         [Ignore]
@@ -74,11 +77,7 @@
 
         [Ignore]
         public IReadOnlyList<NetType> GenericTypeInstantiationArgs { get; set; }
-
-        [Ignore]
-        public IList<NetType> Types { get; set; }
-
-
+        
         public NetType()
         {
             Type = TypeClass.External;
@@ -88,8 +87,8 @@
             Attributes = new List<NetType>();
             Methods = new List<NetMethod>();
             Properties = new List<NetProperty>();
+            Fields = new List<NetField>();
             GenericTypeArgs = new List<NetType>();
-            Types = new List<NetType>();
         }
         
         public override string ToString()

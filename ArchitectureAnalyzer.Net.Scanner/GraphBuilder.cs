@@ -148,27 +148,12 @@ namespace ArchitectureAnalyzer.Net.Scanner
                     ConnectMefUsedInterfaces(type, tx);
                     ConnectGenericTypeArgs(type, tx);
                     ConnectGenericTypeInstantiation(type, tx);
-                    ConnectUsedTypes(type, tx);
                 }
 
                 tx.Commit();
             }
         }
-
-        private void ConnectUsedTypes(NetType type, IGraphDatabaseTransaction tx)
-        {
-            if (type.Types.Any())
-            {
-                foreach (var usedType in type.Types)
-                {
-                    if (usedType != null)
-                    {
-                        tx.CreateRelationship(type, usedType, Relationship.USES_TYPE);
-                    }
-                }
-            }
-        }
-
+        
         private void ConnectTypeDefinition(NetType type, IGraphDatabaseTransaction tx)
         {
             var assembly = type.Assembly;

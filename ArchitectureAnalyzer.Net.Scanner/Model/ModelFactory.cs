@@ -20,6 +20,8 @@
 
         private readonly ModelMap<PropertyKey, NetProperty> _propertyMap;
 
+        private readonly ModelMap<FieldKey, NetField> _fieldMap;
+
         public ModelFactory()
         {
             _assemblyMap = new ModelMap<string, NetAssembly>();
@@ -27,6 +29,7 @@
             _methodMap = new ModelMap<MethodKey, NetMethod>();
             _methodParameterMap = new ModelMap<MethodParameterKey, NetMethodParameter>();
             _propertyMap = new ModelMap<PropertyKey, NetProperty>();
+            _fieldMap = new ModelMap<FieldKey, NetField>();
         }
 
         public NetAssembly CreateAssemblyModel(AssemblyDefinition assemblyDefinition)
@@ -105,6 +108,16 @@
 
             var model = _propertyMap[key];
             model.Name = propertyDefinition.Name;
+
+            return model;
+        }
+
+        public NetField CreateFieldModel(FieldDefinition fieldDefinition)
+        {
+            var key = new FieldKey(fieldDefinition.DeclaringType.FullName, fieldDefinition.Name);
+
+            var model = _fieldMap[key];
+            model.Name = fieldDefinition.Name;
 
             return model;
         }

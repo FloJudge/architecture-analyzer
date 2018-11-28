@@ -278,13 +278,13 @@
         }
 
         [Test]
-        public void DoesPublicTypeUsesDependingTypeInProperty()
+        public void HasTypeFieldMembers()
         {
-            var type = GetTypeDefintion<TypeUsingOtherTypeInProperty>();
+            var type = GetTypeDefintion(typeof(ClassWithFields));
 
             var model = _scanner.ScanType(type, _assembly);
 
-            Assert.That(model.Types.Any(), Is.True);
+            Assert.That(model.Fields.Any(), Is.True);
         }
     }
 }

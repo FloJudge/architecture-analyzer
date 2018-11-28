@@ -22,7 +22,8 @@
         
         NetProperty CreatePropertyModel(PropertyDefinition propertyDefinition);
 
-
+        NetField CreateFieldModel(FieldDefinition field);
+        
         IEnumerable<NetAssembly> GetAssemblyModels();
         
         IEnumerable<NetType> GetTypeModels();

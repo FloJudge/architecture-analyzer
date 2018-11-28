@@ -49,5 +49,10 @@
         {
             return GetTypeDefintion<T>().Properties.First(property => property.Name == propertyName);
         }
+
+        protected FieldDefinition GetFieldDefinition<T>(string fieldName)
+        {
+            return GetTypeDefintion<T>().Fields.First(field => field.Name == fieldName);
+        }
     }
 }

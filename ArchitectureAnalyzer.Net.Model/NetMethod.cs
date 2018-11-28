@@ -37,7 +37,7 @@
         public IReadOnlyList<NetType> GenericParameters { get; set; }
 
         [Ignore]
-        public IList<NetType> MethodTypes { get; set; }
+        public IList<NetType> TypesInMethodBody { get; set; }
         
         public NetMethod()
         {
@@ -47,7 +47,7 @@
             Exports = new List<NetType>();
             Imports = new List<NetType>();
 
-            MethodTypes = new List<NetType>();
+            TypesInMethodBody = new List<NetType>();
         }
         
         public override string ToString()

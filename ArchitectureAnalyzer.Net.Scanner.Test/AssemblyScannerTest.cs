@@ -76,7 +76,8 @@
                                         nameof(UserTypeAttributedClass),
                                         nameof(TypeUsingOtherTypeInProperty),
                                         nameof(TypeUsageInMethod),
-                                        nameof(UsedType)
+                                        nameof(UsedType),
+                                        nameof(ClassWithFields)
                                     };
 
             Assert.That(assemblyModel.DefinedTypes.Select(t => t.Name), Is.EquivalentTo(expectedTypes));
