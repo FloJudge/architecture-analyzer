@@ -6,7 +6,7 @@
 
     using ArchitectureAnalyzer.Core.Graph;
     
-    public class NetType : Node
+    public class NetType : Node, IAnalyzerExtension
     {
         public enum TypeClass
         {
@@ -49,12 +49,6 @@
         public IList<NetType> Implements { get; set; }
 
         [Ignore]
-        public IList<NetType> Exports { get; set; }
-
-        [Ignore]
-        public IList<NetType> Imports { get; set; }
-
-        [Ignore]
         public IList<NetType> Attributes { get; set; }
 
         [Ignore]
@@ -77,18 +71,34 @@
 
         [Ignore]
         public IReadOnlyList<NetType> GenericTypeInstantiationArgs { get; set; }
-        
+
+        #region IAnalyzerExtension
+
+        [Ignore]
+        public IList<NetType> Exports { get; set; }
+
+        [Ignore]
+        public IList<NetType> Imports { get; set; }
+
+        [Ignore]
+        public IList<NetType> TypesUsedInBody { get; set; }
+
+        #endregion
+
         public NetType()
         {
             Type = TypeClass.External;
-            Exports = new List<NetType>();
-            Imports = new List<NetType>();
             Implements = new List<NetType>();
             Attributes = new List<NetType>();
             Methods = new List<NetMethod>();
             Properties = new List<NetProperty>();
-            Fields = new List<NetField>();
             GenericTypeArgs = new List<NetType>();
+            
+            Exports = new List<NetType>();
+            Imports = new List<NetType>();
+            TypesUsedInBody = new List<NetType>();
+
+            Fields = new List<NetField>();
         }
         
         public override string ToString()
