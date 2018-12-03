@@ -5,17 +5,11 @@ namespace ArchitectureAnalyzer.Net.Model
 
     using ArchitectureAnalyzer.Core.Graph;
     
-    public class NetProperty : Node, IGenericContext
+    public class NetProperty : Node, IGenericContext, IAnalyzerExtension
     {
         private static readonly IReadOnlyList<NetType> NoGenericParameters = new NetType[0];
 
         public string Name { get; set; }
-
-        [Ignore]
-        public IList<NetType> Exports { get; set; }
-
-        [Ignore]
-        public IList<NetType> Imports { get; set; }
 
         [Ignore]
         public NetType Type { get; set; }
@@ -25,16 +19,25 @@ namespace ArchitectureAnalyzer.Net.Model
 
         [Ignore]
         public IReadOnlyList<NetType> GenericParameters => NoGenericParameters;
+        
+        #region IAnalyzerExtension
 
         [Ignore]
-        public IList<NetType> TypesInPropertyBody { get; set; }
+        public IList<NetType> Exports { get; set; }
+
+        [Ignore]
+        public IList<NetType> Imports { get; set; }
+
+        [Ignore]
+        public IList<NetType> TypesUsedInBody { get; set; }
+
+        #endregion
 
         public NetProperty()
         {
             Exports = new List<NetType>();
             Imports = new List<NetType>();
-
-            TypesInPropertyBody = new List<NetType>();
+            TypesUsedInBody = new List<NetType>();
         }
     }
 }

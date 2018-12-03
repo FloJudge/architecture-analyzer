@@ -37,7 +37,7 @@
             methodModel.Exports = GetMefUsedInterfaces(method, nameof(AttributeType.Export));
             methodModel.Imports = GetMefUsedInterfaces(method, nameof(AttributeType.Import));
 
-            methodModel.TypesInMethodBody = GetUsedTypesInMethodBody(method);
+            methodModel.TypesUsedInBody = GetUsedTypesInMethodBody(method);
 
             return methodModel;
         }

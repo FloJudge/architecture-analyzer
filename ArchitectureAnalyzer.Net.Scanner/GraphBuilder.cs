@@ -223,6 +223,15 @@ namespace ArchitectureAnalyzer.Net.Scanner
             ConnectMethodParameters(method, tx);
             ConnectGenericMethodParameters(method, tx);
             ConnectMefUsagesInMethod(type, method, tx);
+
+            ConnectMethodBodyVariables(method, tx);
+        }
+        private void ConnectMethodBodyVariables(NetMethod method, IGraphDatabaseTransaction tx)
+        {
+            foreach (var variable in method.TypesUsedInBody)
+            {
+                tx.CreateRelationship(method, variable, Relationship.HAS_TYPE);
+            }
         }
 
         private void ConnectMefUsagesInMethod(NetType type, NetMethod method, IGraphDatabaseTransaction tx)
@@ -292,6 +301,16 @@ namespace ArchitectureAnalyzer.Net.Scanner
                 ConnectProperty(type, property, tx);
 
                 ConnectMefUsageInProperties(type, tx, property);
+
+                ConnectPropertyBodyVariables(property, tx);
+            }
+        }
+
+        private void ConnectPropertyBodyVariables(NetProperty property, IGraphDatabaseTransaction tx)
+        {
+            foreach (var variable in property.TypesUsedInBody)
+            {
+                tx.CreateRelationship(property, variable, Relationship.HAS_TYPE);
             }
         }
 

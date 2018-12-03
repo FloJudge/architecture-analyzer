@@ -25,7 +25,7 @@
             propertyModel.Exports = GetMefUsedInterfaces(property, nameof(AttributeType.Export));
             propertyModel.Imports = GetMefUsedInterfaces(property, nameof(AttributeType.Import));
 
-            propertyModel.TypesInPropertyBody = GetUsedTypesInPropertyBody(property);
+            propertyModel.TypesUsedInBody = GetUsedTypesInPropertyBody(property);
 
             return propertyModel;
         }

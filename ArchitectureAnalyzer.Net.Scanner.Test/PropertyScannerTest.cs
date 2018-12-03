@@ -86,7 +86,7 @@ namespace ArchitectureAnalyzer.Net.Scanner.Test
             var model = _scanner.ScanProperty(property, NetType<TypeUsingOtherTypeInProperty>());
 
             var expectedTypes = new[] { NetType<UsedType>() };
-            Assert.That(model.TypesInPropertyBody, Is.EquivalentTo(expectedTypes));
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
         }
     }
 }

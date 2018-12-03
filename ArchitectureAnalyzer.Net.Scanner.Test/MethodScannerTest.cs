@@ -221,7 +221,7 @@
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
             var expectedTypes = new[] { NetType(typeof(UsedType)) };
-            Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
         }
 
         [Test]
@@ -232,7 +232,7 @@
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
             var expectedTypes = new[] { NetType(typeof(UsedType)) };
-            Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
         }
 
         [Test]
@@ -243,7 +243,7 @@
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
             var expectedTypes = new[] { NetType<Object>(), NetType<UsedType>() };
-            Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
         }
 
         [Test]
@@ -254,7 +254,7 @@
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
             var expectedTypes = new[] { NetType(typeof(Object)), NetType(typeof(UsedType)) };
-            Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
         }
 
         [Test]
@@ -265,7 +265,7 @@
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
             var expectedTypes = new[] { NetType(typeof(List<UsedType>)) };
-            Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
         }
 
        [Test]
@@ -276,7 +276,7 @@
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
             
             var expectedTypes = new[] { NetType(typeof(Tuple<UsedType, bool>)) };
-            Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
         }
 
        [Test]
@@ -287,7 +287,7 @@
            var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
            var expectedTypes = new[] { NetType(typeof(Tuple<UsedType, bool>)), NetType(typeof(Tuple<int, float>)) };
-           Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
+           Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
        }
 
         [Test]
@@ -298,7 +298,7 @@
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
             var expectedTypes = new[] { NetType(typeof(Tuple<UsedType, UsedType>)) };
-            Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
         }
 
         [Test]
@@ -309,7 +309,7 @@
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
             var expectedTypes = new[] { NetType(typeof(UsedType[])) };
-            Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
         }
 
         [Test]
@@ -320,7 +320,7 @@
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
             var expectedTypes = new[] { NetType(typeof(List<Tuple<UsedType, bool>>)) };
-            Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
         }
 
         [Test]
@@ -331,7 +331,7 @@
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
             var expectedTypes = new[] { NetType(typeof(List<Action<UsedType>>)) };
-            Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
         }
 
         [Test]
@@ -342,7 +342,7 @@
             var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
 
             var expectedTypes = new[] { NetType(typeof(List<List<UsedType>>))};
-            Assert.That(model.TypesInMethodBody, Is.EquivalentTo(expectedTypes));
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
         }
     }
 }
