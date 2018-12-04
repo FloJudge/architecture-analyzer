@@ -313,6 +313,17 @@
         }
 
         [Test]
+        public void DoesMethodUsesInitDynamicListTypeWithReturnType()
+        {
+            var method = GetMethodDefinition<TypeUsageInMethod>(nameof(TypeUsageInMethod.InitDynamicListTypeWithReturnTypeInMethod));
+
+            var model = _scanner.ScanMethod(method, NetType<TypeUsageInMethod>());
+
+            var expectedTypes = new[] { NetType(typeof(UsedType[])), NetType(typeof(UsedType)) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+
+        [Test]
         public void DoesMethodUsesInitListTupleTypes()
         {
             var method = GetMethodDefinition<TypeUsageInMethod>(nameof(TypeUsageInMethod.InitListTupleTypesInMethod));

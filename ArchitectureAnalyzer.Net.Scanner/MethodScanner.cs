@@ -140,7 +140,7 @@
             var variableTypes = GetTypesFromMethodVariables(methodDefinition.Body?.Variables);
             var instructionTypes = GetTypesFromMethodInstructions(methodDefinition.Body?.Instructions);
 
-            return variableTypes.ToList();
+            return variableTypes.Where(IsValidNetType).Distinct().ToList();
         }
     }
 }

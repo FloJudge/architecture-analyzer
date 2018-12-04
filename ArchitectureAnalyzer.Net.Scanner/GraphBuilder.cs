@@ -146,7 +146,10 @@ namespace ArchitectureAnalyzer.Net.Scanner
                     ConnectProperties(type, tx);
                     ConnectFields(type, tx);
                     ConnectAttributes(type, tx);
-                    ConnectMefUsedInTypes(type, tx);
+
+                    ConnectAnalyzerExtensionValues(type, type.Exports, Relationship.EXPORTS, tx);
+                    ConnectAnalyzerExtensionValues(type, type.Imports, Relationship.IMPORTS, tx);
+
                     ConnectGenericTypeArgs(type, tx);
                     ConnectGenericTypeInstantiation(type, tx);
                 }
@@ -185,19 +188,6 @@ namespace ArchitectureAnalyzer.Net.Scanner
             }
         }
 
-        private void ConnectMefUsedInTypes(NetType type, IGraphDatabaseTransaction tx)
-        {
-            foreach (var typeExport in type.Exports)
-            {
-                tx.CreateRelationship(type, typeExport, Relationship.EXPORTS);
-            }
-
-            foreach (var typeImport in type.Imports)
-            {
-                tx.CreateRelationship(type, typeImport, Relationship.IMPORTS);
-            }
-        }
-
         private void ConnectAttributes(NetType type, IGraphDatabaseTransaction tx)
         {
             foreach (var attributeType in type.Attributes)
@@ -222,29 +212,10 @@ namespace ArchitectureAnalyzer.Net.Scanner
 
             ConnectMethodParameters(method, tx);
             ConnectGenericMethodParameters(method, tx);
-            ConnectMefUsagesInMethod(type, method, tx);
 
-            ConnectMethodBodyVariables(method, tx);
-        }
-        private void ConnectMethodBodyVariables(NetMethod method, IGraphDatabaseTransaction tx)
-        {
-            foreach (var variable in method.TypesUsedInBody)
-            {
-                tx.CreateRelationship(method, variable, Relationship.HAS_TYPE);
-            }
-        }
-
-        private void ConnectMefUsagesInMethod(NetType type, NetMethod method, IGraphDatabaseTransaction tx)
-        {
-            foreach (var export in method.Exports)
-            {
-                tx.CreateRelationship(type, export, Relationship.EXPORTS);
-            }
-
-            foreach (var import in method.Imports)
-            {
-                tx.CreateRelationship(type, import, Relationship.IMPORTS);
-            }
+            ConnectAnalyzerExtensionValues(method, method.Exports, Relationship.EXPORTS, tx);
+            ConnectAnalyzerExtensionValues(method, method.Imports, Relationship.IMPORTS, tx);
+            ConnectAnalyzerExtensionValues(method, method.TypesUsedInBody, Relationship.HAS_TYPE, tx);
         }
 
         private void ConnectMethodParameters(NetMethod method, IGraphDatabaseTransaction tx)
@@ -299,18 +270,10 @@ namespace ArchitectureAnalyzer.Net.Scanner
             foreach (var property in type.Properties)
             {
                 ConnectProperty(type, property, tx);
-
-                ConnectMefUsageInProperties(type, tx, property);
-
-                ConnectPropertyBodyVariables(property, tx);
-            }
-        }
-
-        private void ConnectPropertyBodyVariables(NetProperty property, IGraphDatabaseTransaction tx)
-        {
-            foreach (var variable in property.TypesUsedInBody)
-            {
-                tx.CreateRelationship(property, variable, Relationship.HAS_TYPE);
+                
+                ConnectAnalyzerExtensionValues(property, property.Exports, Relationship.EXPORTS, tx);
+                ConnectAnalyzerExtensionValues(property, property.Imports, Relationship.IMPORTS, tx);
+                ConnectAnalyzerExtensionValues(property, property.TypesUsedInBody, Relationship.HAS_TYPE, tx);
             }
         }
 
@@ -320,44 +283,28 @@ namespace ArchitectureAnalyzer.Net.Scanner
             tx.CreateRelationship(property, property.Type, Relationship.HAS_TYPE);
         }
 
-        private static void ConnectMefUsageInProperties(NetType type, IGraphDatabaseTransaction tx, NetProperty property)
-        {
-            foreach (var exportType in property.Exports)
-            {
-                tx.CreateRelationship(type, exportType, Relationship.EXPORTS);
-            }
-
-            foreach (var importType in property.Imports)
-            {
-                tx.CreateRelationship(type, importType, Relationship.IMPORTS);
-            }
-        }
-
         private void ConnectFields(NetType type, IGraphDatabaseTransaction tx)
         {
             foreach (var field in type.Fields)
             {
                 ConnectField(type, field, tx);
-                ConnectMefUsageInFields(type, field, tx);
+
+                ConnectAnalyzerExtensionValues(field, field.Exports, Relationship.EXPORTS, tx);
+                ConnectAnalyzerExtensionValues(field, field.Imports, Relationship.IMPORTS, tx);
             }
         }
 
-        private static void ConnectField(NetType type, NetField field, IGraphDatabaseTransaction tx)
+        private void ConnectField(NetType type, NetField field, IGraphDatabaseTransaction tx)
         {
             tx.CreateRelationship(type, field, Relationship.DEFINES_FIELD);
             tx.CreateRelationship(field, field.Type, Relationship.HAS_TYPE);
         }
-
-        private static void ConnectMefUsageInFields(NetType type, NetField field, IGraphDatabaseTransaction tx)
+        
+        private void ConnectAnalyzerExtensionValues<T>(T node, IEnumerable<NetType> analyzerExtensionValues, string relationshipType, IGraphDatabaseTransaction tx) where T : Node
         {
-            foreach (var exportType in field.Exports)
+            foreach (var value in analyzerExtensionValues)
             {
-                tx.CreateRelationship(type, exportType, Relationship.EXPORTS);
-            }
-
-            foreach (var importType in field.Imports)
-            {
-                tx.CreateRelationship(type, importType, Relationship.IMPORTS);
+                tx.CreateRelationship(node, value, relationshipType);
             }
         }
     }

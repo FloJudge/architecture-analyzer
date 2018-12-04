@@ -76,5 +76,11 @@
         {
             var ofType = typeof(UsedType);
         }
+
+        public UsedType InitDynamicListTypeWithReturnTypeInMethod()
+        {
+            var list = new[] { new UsedType() };
+            return null;
+        }
     }
 }

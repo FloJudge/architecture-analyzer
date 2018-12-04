@@ -2,6 +2,7 @@
 namespace ArchitectureAnalyzer.Net.Scanner.Test
 {
     using System;
+    using System.Collections.Generic;
 
     using ArchitectureAnalyzer.Net.Model;
 
@@ -81,11 +82,236 @@ namespace ArchitectureAnalyzer.Net.Scanner.Test
         [Test]
         public void DoesPublicTypeUsesDependingTypeTypeInPropertyGetter()
         {
-            var property = GetPropertyDefinition<TypeUsingOtherTypeInProperty>(nameof(TypeUsingOtherTypeInProperty.UsedTypePropertyWithGetter));
+            var property = GetPropertyDefinition<TypeUsageInProperty>(nameof(TypeUsageInProperty.ReturnTypeInPropertyGetter));
 
-            var model = _scanner.ScanProperty(property, NetType<TypeUsingOtherTypeInProperty>());
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
 
             var expectedTypes = new[] { NetType<UsedType>() };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+
+        [TestCase(nameof(TypeUsageInProperty.TypeDeclarationInPropertyGetter))]
+        [TestCase(nameof(TypeUsageInProperty.TypeDeclarationInPropertySetter))]
+        public void DoesPropertyUsesTypeAsTypeDeclaration(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(UsedType)) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+
+
+        [TestCase(nameof(TypeUsageInProperty.InitTypeInPropertyGetter))]
+        [TestCase(nameof(TypeUsageInProperty.InitTypeInPropertySetter))]
+        public void DoesPropertyUsesTypeAsInitType(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(UsedType)) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+        
+        [TestCase(nameof(TypeUsageInProperty.TypeSafeCastInPropertyGetter))]
+        [TestCase(nameof(TypeUsageInProperty.TypeSafeCastInPropertySetter))]
+        public void DoesPropertyUsesTypeAsTypeSafeCast(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType<Object>(), NetType<UsedType>() };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+
+        [TestCase(nameof(TypeUsageInProperty.TypeCastInPropertyGetter))]
+        [TestCase(nameof(TypeUsageInProperty.TypeCastInPropertySetter))]
+        public void DoesPropertyUsesTypeAsTypeCast(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(Object)), NetType(typeof(UsedType)) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+
+        [TestCase(nameof(TypeUsageInProperty.InitListTypeInPropertyGetter))]
+        public void DoesPropertyUsesTypeAsInitListTypeInPropertyGetter(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(List<UsedType>)), NetType(typeof(UsedType)) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+        
+        [TestCase(nameof(TypeUsageInProperty.InitListTypeInPropertySetter))]
+        public void DoesPropertyUsesTypeAsInitListTypeInPropertySetter(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(List<UsedType>)) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+
+        [TestCase(nameof(TypeUsageInProperty.InitTypesInTupleInPropertyGetter))]
+        public void DoesPropertyUsesInitTypesInTupleInPropertyGetter(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(Tuple<UsedType, bool>)), NetType(typeof(UsedType)) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+        
+        [TestCase(nameof(TypeUsageInProperty.InitTypesInTupleInPropertySetter))]
+        public void DoesPropertyUsesInitTypesInTupleInPropertySetter(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(Tuple<UsedType, bool>)) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+
+        [TestCase(nameof(TypeUsageInProperty.InitMultipleTypesInMultipleTupleInPropertyGetter))]
+        public void DoesPropertyUsesInitMultipleTypesInMultipleTupleInPropertyGetter(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(Tuple<UsedType, bool>)), NetType(typeof(Tuple<int, float>)), NetType(typeof(UsedType)) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+        
+        [TestCase(nameof(TypeUsageInProperty.InitMultipleTypesInMultipleTupleInPropertySetter))]
+        public void DoesPropertyUsesInitMultipleTypesInMultipleTupleInPropertySetter(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(Tuple<UsedType, bool>)), NetType(typeof(Tuple<int, float>)) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+
+        [TestCase(nameof(TypeUsageInProperty.InitTupleWithSameTypesInPropertyGetter))]
+        public void DoesPropertyUsesInitTupleWithSameTypesInPropertyGetter(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(Tuple<UsedType, UsedType>)), NetType(typeof(UsedType)) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+        
+        [TestCase(nameof(TypeUsageInProperty.InitTupleWithSameTypesInPropertySetter))]
+        public void DoesPropertyUsesInitTupleWithSameTypesInPropertySetter(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(Tuple<UsedType, UsedType>)) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+
+        [TestCase(nameof(TypeUsageInProperty.InitDynamicListTypInPropertyGetter))]
+        public void DoesPropertyUsesInitDynamicListTypInPropertyGetter(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(UsedType[])), NetType(typeof(UsedType)) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+        
+        [TestCase(nameof(TypeUsageInProperty.InitDynamicListTypInPropertySetter))]
+        public void DoesPropertyUsesInitDynamicListTypInPropertySetter(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(UsedType[])) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+
+        [TestCase(nameof(TypeUsageInProperty.InitListTupleTypesInPropertyGetter))]
+        public void DoesPropertyUsesInitListTupleTypesInPropertyGetter(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(List<Tuple<UsedType, bool>>)), NetType(typeof(UsedType)) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+        
+        [TestCase(nameof(TypeUsageInProperty.InitListTupleTypesInPropertySetter))]
+        public void DoesPropertyUsesInitListTupleTypesInPropertySetter(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(List<Tuple<UsedType, bool>>)) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+
+        [TestCase(nameof(TypeUsageInProperty.InitListActionTypeInPropertyGetter))]
+        public void DoesPropertyUsesInitListActionTypeInPropertyGetter(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(List<Action<UsedType>>)), NetType(typeof(UsedType)) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+        
+        [TestCase(nameof(TypeUsageInProperty.InitListActionTypeInPropertySetter))]
+        public void DoesPropertyUsesInitListActionTypeInPropertySetter(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(List<Action<UsedType>>)) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+
+        [TestCase(nameof(TypeUsageInProperty.InitListListTypeInPropertyGetter))]
+        public void DoesPropertyUsesInitListListTypeInPropertyGetter(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(List<List<UsedType>>)), NetType(typeof(UsedType)) };
+            Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
+        }
+        
+        [TestCase(nameof(TypeUsageInProperty.InitListListTypeInPropertySetter))]
+        public void DoesPropertyUsesInitListListTypeInPropertySetter(string propertyName)
+        {
+            var property = GetPropertyDefinition<TypeUsageInProperty>(propertyName);
+
+            var model = _scanner.ScanProperty(property, NetType<TypeUsageInProperty>());
+
+            var expectedTypes = new[] { NetType(typeof(List<List<UsedType>>)) };
             Assert.That(model.TypesUsedInBody, Is.EquivalentTo(expectedTypes));
         }
     }
