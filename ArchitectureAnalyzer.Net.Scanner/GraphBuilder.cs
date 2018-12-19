@@ -75,6 +75,7 @@ namespace ArchitectureAnalyzer.Net.Scanner
             CreateNodes(_factory.GetMethodModels());
             CreateNodes(_factory.GetMethodParameterModels());
             CreateNodes(_factory.GetPropertyModels());
+            CreateNodes(_factory.GetFieldModels());
         }
 
         private void CreateNodes<TNode>(IEnumerable<TNode> nodes)

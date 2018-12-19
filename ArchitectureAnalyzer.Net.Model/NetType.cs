@@ -1,7 +1,6 @@
 ﻿namespace ArchitectureAnalyzer.Net.Model
 {
     using System.Collections.Generic;
-    using System.Dynamic;
     using System.Linq;
 
     using ArchitectureAnalyzer.Core.Graph;

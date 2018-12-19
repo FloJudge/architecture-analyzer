@@ -147,6 +147,11 @@
             return _propertyMap.Models;
         }
 
+        public IEnumerable<NetField> GetFieldModels()
+        {
+            return _fieldMap.Models;
+        }
+
         private class ModelMap<TKey, TNode> where TNode : Node, new()
         {
             // ReSharper disable once StaticMemberInGenericType

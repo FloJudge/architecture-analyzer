@@ -4,7 +4,7 @@
 
     using ArchitectureAnalyzer.Core.Graph;
     
-    public class NetMethodParameter : Node
+    public class NetMethodParameter : Node, IAnalyzerExtension
     {
         public string Name { get; set; }
 
@@ -15,6 +15,22 @@
 
         [Ignore]
         public NetMethod DeclaringMethod { get; set; }
+        
+        [Ignore]
+        public IList<NetType> Exports { get; set; }
+
+        [Ignore]
+        public IList<NetType> Imports { get; set; }
+
+        [Ignore]
+        public IList<NetType> TypesUsedInBody { get; set; }
+
+        public NetMethodParameter()
+        {
+            Imports = new List<NetType>();
+            Exports = new List<NetType>();
+            TypesUsedInBody = new List<NetType>();
+        }
 
         public override string ToString()
         {

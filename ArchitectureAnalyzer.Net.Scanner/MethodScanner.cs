@@ -34,8 +34,8 @@
             methodModel.ReturnType = GetTypeFromTypeReference(method.ReturnType);
             methodModel.Parameters = CreateParameters(method, methodModel);
             
-            methodModel.Exports = GetMefUsedInterfaces(method, nameof(AttributeType.Export));
-            methodModel.Imports = GetMefUsedInterfaces(method, nameof(AttributeType.Import));
+            methodModel.Exports = GetMefUsedInterfacesFromMethod(method, nameof(AttributeType.Export));
+            methodModel.Imports = GetMefUsedInterfacesFromMethod(method, nameof(AttributeType.Import));
 
             methodModel.TypesUsedInBody = GetUsedTypesInMethodBody(method);
 
@@ -65,6 +65,8 @@
             model.Order = param.Sequence;
             model.Type = GetTypeFromTypeReference(param.ParameterType);
             model.DeclaringMethod = methodModel;
+            model.Imports = GetMefUsedInterfacesFromMethodParameter(param, nameof(AttributeType.Import));
+            model.Exports = GetMefUsedInterfacesFromMethodParameter(param, nameof(AttributeType.Export));
 
             return model;
         }
@@ -100,7 +102,7 @@
         {
             return method.HasGenericParameters;
         }
-        private IList<NetType> GetMefUsedInterfaces(MethodDefinition methodDefinition, string attributeTypeName)
+        private IList<NetType> GetMefUsedInterfacesFromMethod(MethodDefinition methodDefinition, string attributeTypeName)
         {
             // Case: Attribute on Method
             var mefMethodTypes = methodDefinition.CustomAttributes
@@ -110,11 +112,22 @@
 
             // Case: Attribute on MethodParameter
             var mefParamTypes = methodDefinition.Parameters
-                    .Select(param => GetMefUsedMethodInterface(param, attributeTypeName, methodDefinition.CustomAttributes.FirstOrDefault(attr => attr.AttributeType.Name.Contains(attributeTypeName))))
-                    .Where(IsNetType)
-                    .ToList();
+                .Select(param => GetMefUsedMethodInterface(param, attributeTypeName, methodDefinition.CustomAttributes.FirstOrDefault(attr => attr.AttributeType.Name.Contains(attributeTypeName))))
+                .Where(IsNetType)
+                .ToList();
 
             return mefMethodTypes.Concat(mefParamTypes).ToList();
+        }
+
+        private IList<NetType> GetMefUsedInterfacesFromMethodParameter(ParameterDefinition paremeterDefinition, string attributeTypeName)
+        {
+            // Case: Attribute on Method
+            var mefMethodTypes = paremeterDefinition.CustomAttributes
+                .Select(attribute => GetMefUsedTypesFromCustomAttribute(attribute, attributeTypeName, paremeterDefinition.ParameterType))
+                .Where(IsValidNetType)
+                .ToList();
+
+            return mefMethodTypes;
         }
 
         private bool IsValidNetType(NetType t)

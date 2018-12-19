@@ -33,5 +33,7 @@
         IEnumerable<NetMethodParameter> GetMethodParameterModels();
 
         IEnumerable<NetProperty> GetPropertyModels();
+
+        IEnumerable<NetField> GetFieldModels();
     }
 }
